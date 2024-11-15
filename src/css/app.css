@@ -1,0 +1,17 @@
+html, body {
+    height: 100%;        
+    margin: 0;              
+}
+  
+div {      
+    height: 100%;         
+}
+
+main {
+    flex: 1;              
+    min-height: 100%;     
+}
+  
+.LiveLuxe-footer {
+    margin-top: auto;     
+}
