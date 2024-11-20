@@ -21,7 +21,7 @@ function LiveLuxeHeader() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
-                        <Nav.Link href="">Sign In</Nav.Link>
+                        <Nav.Link href="/login">Sign In</Nav.Link>
                         <Nav.Link href="">Sign Up</Nav.Link>
                         <Nav.Link href="">Contacts</Nav.Link>
                     </Nav>
