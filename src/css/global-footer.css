@@ -1,31 +1,31 @@
-.LiveLuxe-footer {
+.global-footer {
     background-color: #171717;
-    color: #fff0f0ef;
+    color: #f7f7f7ef;
     padding: 40px 10px;
 }
 
-.LiveLuxe-footer h5 {
+.global-footer h5 {
     font-size: 20px;
     font-weight: 500;
     margin-bottom: 15px;
 }
 
-.LiveLuxe-footer p {
+.global-footer p {
     font-size: 15px;
     margin: 10px 0;
 }
 
-.LiveLuxe-footer i {
+.global-footer i {
     font-size: 15px;
     color: #D6AD60;
     margin-right: 15px;
 }
 
-.LiveLuxe-footer .d-flex a {
+.global-footer .d-flex a {
     color: #D6AD60;
 }
 
-.LiveLuxe-footer .d-flex a:hover {
+.global-footer .d-flex a:hover {
     transform: scale(1.2);
 }
 

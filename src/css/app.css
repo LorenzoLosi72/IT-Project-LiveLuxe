@@ -1,6 +1,7 @@
 html, body {
     height: 100%;        
-    margin: 0;              
+    margin: 0;  
+    background-color: #171717;            
 }
   
 div {      
@@ -12,6 +13,6 @@ main {
     min-height: 100%;     
 }
   
-.LiveLuxe-footer {
+.Globalfooter {
     margin-top: auto;     
 }
