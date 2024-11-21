@@ -1,11 +1,11 @@
 import React from "react";
 import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../css/footer.css';
+import '../css/global-footer.css';
 
-function LiveLuxeFooter() {
+function GlobalFooter() {
     return (
-        <footer className="LiveLuxe-footer" expand="lg">
+        <footer className="global-footer" expand="lg">
             <Container fluid>
                 <Row>
                     <Col md={4} className="text-center text-md-start">
@@ -46,4 +46,4 @@ function LiveLuxeFooter() {
     );
 };
 
-export default LiveLuxeFooter;
+export default GlobalFooter;
