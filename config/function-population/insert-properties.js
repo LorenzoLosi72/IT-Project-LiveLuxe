@@ -4,6 +4,7 @@ let { resetAutoIncrement } = require('./reset-autoincrement.js');
 // List of property records
 const properties = [{
         Name: 'Appartamento Centrale',
+        GuestsNumber: 4,
         Bedrooms: 2,
         Kitchen: 1,
         Parking: 0,
@@ -18,6 +19,7 @@ const properties = [{
     },
     {
         Name: 'Villa con Giardino',
+        GuestsNumber: 8,
         Bedrooms: 4,
         Kitchen: 1,
         Parking: 1,
@@ -32,6 +34,7 @@ const properties = [{
     },
     {
         Name: 'Monolocale Moderno',
+        GuestsNumber: 2,
         Bedrooms: 1,
         Kitchen: 1,
         Parking: 0,
@@ -46,6 +49,7 @@ const properties = [{
     },
     {
         Name: 'Casa in Montagna',
+        GuestsNumber: 5,
         Bedrooms: 3,
         Kitchen: 1,
         Parking: 1,
@@ -65,9 +69,9 @@ function insertProperties(connection) {
     resetAutoIncrement(connection, 'properties');
 
     properties.forEach(property => {
-        const sql = `INSERT INTO properties (Name, Bedrooms, Kitchen, Parking, Pool, WIFI, AirConditioning, Notes, Address, UserID, LocationID, CategoryID) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const values = [property.Name, property.Bedrooms, property.Kitchen, property.Parking, property.Pool, property.WIFI, property.AirConditioning, property.Notes,
+        const sql = `INSERT INTO properties (Name, GuestsNumber, Bedrooms, Kitchen, Parking, Pool, WIFI, AirConditioning, Notes, Address, UserID, LocationID, CategoryID) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const values = [property.Name, property.GuestsNumber, property.Bedrooms, property.Kitchen, property.Parking, property.Pool, property.WIFI, property.AirConditioning, property.Notes,
             property.Address, property.UserID, property.LocationID, property.CategoryID
         ];
 
