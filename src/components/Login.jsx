@@ -22,7 +22,7 @@ function Login() {
                 ✕
             </Button>
 
-            <h2>Sign Up </h2>
+            <h2>Sign In </h2>
             <Form>
                 <Form.Group controlId="formUsername" className="mb-2">
                     <Form.Label>Username</Form.Label>
