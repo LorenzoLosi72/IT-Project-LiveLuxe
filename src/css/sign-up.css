@@ -1,0 +1,80 @@
+.signup-container {
+    margin: 80px auto;
+    padding: 20px 15px;
+    background-color: #1a1a1a;
+    border-radius: 15px;
+    width: 400px;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #f0e68c;
+}
+
+.signup-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.2);
+}
+
+.signup-container h2 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #f0e68c;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.signup-container .form-label {
+    font-weight: 600;
+    color: #f0e68c;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.signup-container .form-control {
+    border-radius: 8px;
+    border: 1px solid #f0e68c;
+    padding: 8px;
+    font-size: 0.85rem;
+    color: #fff;
+    background-color: #333;
+}
+
+.signup-container .form-control::placeholder {
+    color: #ddd;
+    font-size: 0.8rem;
+}
+
+.signup-container .form-control:focus {
+    border-color: #ffd700;
+    background-color: #444;
+}
+
+.signup-container .btn-primary {
+    background: linear-gradient(90deg, #f0e68c, #ffd700);
+    border: none;
+    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 8px;
+    color: #1a1a1a;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.signup-container .btn-primary:hover {
+    background: linear-gradient(90deg, #ffd700, #f0e68c);
+}
+
+.signup-container .close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #f0e68c;
+    color: #1a1a1a;
+    font-size: 1rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

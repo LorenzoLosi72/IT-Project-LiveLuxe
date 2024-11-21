@@ -5,6 +5,9 @@ import LiveLuxeFooter from './components/Footer.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/app.css';
 import Login from './components/Login.jsx';
+import Signup from './components/Sign-Up.jsx';
+
+
 
 
 // Base of the react application
@@ -16,6 +19,7 @@ function App(){
                 <main className="flex-fill">
                     <Routes>
                         <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
                         {}
                     </Routes>
                 </main>
