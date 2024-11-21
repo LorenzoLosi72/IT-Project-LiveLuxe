@@ -1,6 +1,7 @@
 import React from 'react';
-import LiveLuxeHeader from './components/Header-Public.jsx';
-import LiveLuxeFooter from './components/Footer.jsx';
+import PublicHeader from './components/Public-Header.jsx';
+import GlobalFooter from './components/Global-Footer.jsx';
+import PublicSearchbar from './components/Public-Searchbar.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/app.css';
 
@@ -8,9 +9,12 @@ import './css/app.css';
 function App(){
     return (
         <div>
-           <LiveLuxeHeader/>
-           <main></main>
-           <LiveLuxeFooter/>
+           <PublicHeader/>
+           <main>
+                <PublicSearchbar/>
+                <hr></hr>
+           </main>
+           <GlobalFooter/>
         </div>
     );
 };
