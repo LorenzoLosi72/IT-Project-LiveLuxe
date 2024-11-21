@@ -1,6 +1,8 @@
+// Import packages, libraries and stylesheets
 import React, { useState } from 'react';
 import '../css/public-searchbar.css';
 
+// Public Searchbar component
 const PublicSearchbar = () => {
     //states for input fields
     const [destination, setDestination] = useState("");

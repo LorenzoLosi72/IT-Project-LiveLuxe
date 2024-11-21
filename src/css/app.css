@@ -3,14 +3,13 @@ html, body {
     margin: 0;  
     background-color: #171717;            
 }
-  
-div {      
-    height: 100%;         
+
+div {
+    height: auto; 
 }
 
 main {
-    flex: 1;              
-    min-height: 100%;     
+    min-height: 100%;
 }
   
 .Globalfooter {
