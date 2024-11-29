@@ -45,7 +45,7 @@ function PublicHeader() {
                                 sign in
                             </Dropdown.Item>
                             <Dropdown.Item
-                                href="/host-registration"
+                                href="/guest-registration"
                                 className={`custom-dropdown-item ${ selectedItem === 'Sign Up' ? 'selected' : '' }`}
                                 onClick={() => handleSelect('Sign Up')}
                             >

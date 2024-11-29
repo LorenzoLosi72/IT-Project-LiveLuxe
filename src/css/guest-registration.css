@@ -1,75 +1,86 @@
+/* Container principale per la form */
 .signup-container {
     margin: 80px auto;
     padding: 20px 15px;
     background-color: #171717;
     border: 2px solid #D6AD60;
     border-radius: 15px;
-    width: 400px;
+    width: 600px; /* Larghezza aumentata */
     transition: transform 0.3s ease;
 }
 
+/* Effetto hover sul contenitore */
 .signup-container:hover {
     transform: translateY(-5px);
 }
 
+/* Titolo della form */
 .signup-container h2 {
-    font-size: 1.3rem;
+    font-size: 1.5rem; /* Dimensione aumentata */
     font-weight: 700;
     color: #f7f7f7ef;
     text-align: center;
     margin-bottom: 15px;
 }
 
+/* Label dei campi */
 .signup-container .form-label {
     font-weight: 600;
     color: #f7f7f7ef;
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* Leggero incremento */
     margin-bottom: 5px;
 }
 
+/* Stile generale dei campi di input */
 .signup-container .form-control {
     border-radius: 15px;
     border: 2px solid #D6AD60;
-    padding: 8px;
-    font-size: 0.85rem;
+    padding: 10px; /* Spaziatura maggiore */
+    font-size: 0.9rem; /* Leggero incremento */
     color: #171717;
-    background-color: #f7f7f7ef; 
+    background-color: #f7f7f7ef;
     transition: all 0.3s ease;
 }
 
+/* Placeholder nei campi di input */
 .signup-container .form-control::placeholder {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 500;
 }
 
+/* Effetto focus sui campi */
 .signup-container .form-control:focus {
     border-color: #D6AD60;
     box-shadow: 0 0 8px #D6AD60;
 }
 
+/* Pulsante principale */
 .signup-container .btn-primary {
     background: #171717;
     border: 2px solid #D6AD60;
-    padding: 10px;
-    font-size: 0.85rem;
+    padding: 12px; /* Più spazio per il pulsante */
+    font-size: 0.95rem; /* Leggero incremento */
     font-weight: 500;
     border-radius: 15px;
     color: #f7f7f7ef;
-    margin-top: 10px; 
+    margin-top: 10px;
 }
 
+/* Effetto hover sul pulsante */
 .signup-container .btn-primary:hover {
     background: #D6AD60;
     color: #171717;
     transform: scale(1.05);
 }
 
+/* Effetto active sul pulsante */
 .signup-container .btn-primary:active {
     background-color: #D6AD60 !important;
-    border-color: #D6AD60 !important;  
+    border-color: #D6AD60 !important;
     transform: scale(0.95);
 }
 
+/* Pulsante per chiudere */
 .signup-container .close-button {
     position: absolute;
     top: 5px;
@@ -78,7 +89,7 @@
     color: #f7f7f7ef;
     font-size: 1rem;
     font-weight: 500;
-    width: 30px; 
+    width: 30px;
     height: 30px;
     border: none;
     display: flex;
@@ -86,14 +97,26 @@
     justify-content: center;
 }
 
+/* Effetto hover sul pulsante di chiusura */
 .signup-container .close-button:hover {
     background-color: #D6AD60;
     color: #171717;
     transform: scale(1.05);
 }
 
+/* Effetto active sul pulsante di chiusura */
 .signup-container .close-button:active {
     background-color: #D6AD60 !important;
-    border-color: #D6AD60 !important;  
+    border-color: #D6AD60 !important;
     transform: scale(0.95);
+}
+
+/* Margine tra le righe */
+.row {
+    margin-bottom: 20px;
+}
+
+/* Padding per le colonne */
+.col-md-6 {
+    padding: 0 10px;
 }

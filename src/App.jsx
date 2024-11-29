@@ -7,7 +7,7 @@ import PublicSearchbar from './components/Public-Searchbar.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/app.css';
 import Login from './components/Login.jsx';
-import HostRegistration from './components/Host-Registration.jsx';
+import GuestRegistration from './components/Guest-Registration.jsx';
 
 // Base of the react application
 function App(){
@@ -19,7 +19,7 @@ function App(){
                     <PublicSearchbar/>
                     <Routes>
                         <Route path="/login" element={<Login />} />
-                        <Route path="/host-registration" element={<HostRegistration />} />
+                        <Route path="/guest-registration" element={<GuestRegistration />} />
                         {}
                     </Routes>
                 </main>
