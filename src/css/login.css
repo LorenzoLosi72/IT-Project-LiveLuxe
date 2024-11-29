@@ -97,3 +97,9 @@
     border-color: #D6AD60 !important;  
     transform: scale(0.95);
 }
+
+.signup-link {
+    color:  #D6AD60 !important; 
+    font-weight: 500;
+    transition: color 0.3s ease;
+}

@@ -9,7 +9,9 @@ import '../css/public-header.css';
 function PublicHeader() {
     const [selectedItem, setSelectedItem] = useState('');
 
-    const handleSelect = (item) => { setSelectedItem(item); };
+    const handleSelect = (item) => {
+        setSelectedItem(item);
+    };
 
     return (
         <Navbar className="public-header">
@@ -27,9 +29,15 @@ function PublicHeader() {
 
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-
-                    <Nav className='ms-auto'>
-                        <Nav.Link href="">rent your home</Nav.Link>
+                    <Nav className="ms-auto">
+                        {}
+                        <Nav.Link
+                            href="/rent-home"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            rent your home
+                        </Nav.Link>
                     </Nav>
 
                     <Dropdown align="end">
@@ -39,21 +47,24 @@ function PublicHeader() {
                         <Dropdown.Menu className="custom-dropdown-menu">
                             <Dropdown.Item
                                 href="/login"
-                                className={`custom-dropdown-item ${ selectedItem === 'Sign In' ? 'selected' : '' }`}
+                                className={`custom-dropdown-item ${
+                                    selectedItem === 'Sign In' ? 'selected' : ''
+                                }`}
                                 onClick={() => handleSelect('Sign In')}
                             >
                                 sign in
                             </Dropdown.Item>
                             <Dropdown.Item
                                 href="/guest-registration"
-                                className={`custom-dropdown-item ${ selectedItem === 'Sign Up' ? 'selected' : '' }`}
+                                className={`custom-dropdown-item ${
+                                    selectedItem === 'Sign Up' ? 'selected' : ''
+                                }`}
                                 onClick={() => handleSelect('Sign Up')}
                             >
                                 sign up
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-
                 </Navbar.Collapse>
             </Container>
         </Navbar>
