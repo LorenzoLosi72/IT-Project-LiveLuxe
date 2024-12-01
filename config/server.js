@@ -28,6 +28,7 @@ app.post('/api/user-data', (req, res) => {
     const connection = require('./connection-database').createConnection();
     const query = `
         SELECT 
+            UserId AS userid,
             Username AS username, 
             Mail AS mail, 
             FirstName AS firstName, 
