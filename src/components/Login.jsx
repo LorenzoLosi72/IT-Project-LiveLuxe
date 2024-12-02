@@ -27,7 +27,7 @@ function Login() {
             const response = await axios.post('http://localhost:3001/api/login', { username, password: hashedPassword });
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('username', username);
-            navigate('/user-account');
+            navigate('/');
         } catch (err) {
             console.error("Authentication failed:", err.response?.data || err.message);
             setError('Invalid username or password');
