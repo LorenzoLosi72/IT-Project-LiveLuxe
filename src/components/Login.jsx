@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../Auth-Context';
 import '../css/login.css';
 
 function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -15,7 +18,7 @@ function Login() {
         const data = encoder.encode(password);
         const hash = await crypto.subtle.digest('SHA-256', data);
         return Array.from(new Uint8Array(hash))
-            .map(byte => byte.toString(16).padStart(2, '0'))
+            .map((byte) => byte.toString(16).padStart(2, '0'))
             .join('');
     };
 
@@ -24,12 +27,16 @@ function Login() {
 
         try {
             const hashedPassword = await hashPassword(password);
-            const response = await axios.post('http://localhost:3001/api/login', { username, password: hashedPassword });
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('username', username);
-            navigate('/');
+            const response = await axios.post('http://localhost:3001/api/login', {
+                username,
+                password: hashedPassword,
+            });
+            login(username);
+            // Redirect alla pagina precedente o all'account utente
+            const redirectPath = location.state?.from?.pathname || '/user-account';
+            navigate(redirectPath);
         } catch (err) {
-            console.error("Authentication failed:", err.response?.data || err.message);
+            console.error('Authentication failed:', err.response?.data || err.message);
             setError('Invalid username or password');
         }
     };

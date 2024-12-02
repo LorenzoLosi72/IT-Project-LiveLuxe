@@ -1,22 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
 import { FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Auth-Context';
 import Logo from '../images/logos/logo.png';
 import '../css/public-header.css';
 
 function PublicHeader() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isLoggedIn, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
-    }, []);
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
+    const handleNavigate = (path) => {
+        navigate(path);
+    };
 
     return (
         <Navbar className="public-header">
             <Container fluid>
-                <Navbar.Brand href="/" className="d-flex align-items-center">
+                <Navbar.Brand onClick={() => handleNavigate('/')} className="d-flex align-items-center" style={{ cursor: 'pointer' }}>
                     <img
                         alt="LiveLuxe-Logo"
                         src={Logo}
@@ -30,9 +36,14 @@ function PublicHeader() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav className="ms-auto">
-                        <Nav.Link href="/rent-home" target="_blank" rel="noopener noreferrer">
-                            Rent Your Home
-                        </Nav.Link>
+                        {isLoggedIn && (
+                            <Nav.Link
+                                onClick={() => handleNavigate('/rent-home')}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                Rent Your Home
+                            </Nav.Link>
+                        )}
                     </Nav>
 
                     <Dropdown align="end">
@@ -41,22 +52,30 @@ function PublicHeader() {
                         </Dropdown.Toggle>
                         <Dropdown.Menu className="custom-dropdown-menu">
                             {isLoggedIn ? (
-                                <Dropdown.Item
-                                    href="/user-account"
-                                    className="custom-dropdown-item"
-                                >
-                                    My Account
-                                </Dropdown.Item>
+                                <>
+                                    <Dropdown.Item
+                                        onClick={() => handleNavigate('/user-account')}
+                                        className="custom-dropdown-item"
+                                    >
+                                        My Account
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={handleLogout}
+                                        className="custom-dropdown-item"
+                                    >
+                                        Logout
+                                    </Dropdown.Item>
+                                </>
                             ) : (
                                 <>
                                     <Dropdown.Item
-                                        href="/login"
+                                        onClick={() => handleNavigate('/login')}
                                         className="custom-dropdown-item"
                                     >
                                         Sign In
                                     </Dropdown.Item>
                                     <Dropdown.Item
-                                        href="/guest-registration"
+                                        onClick={() => handleNavigate('/guest-registration')}
                                         className="custom-dropdown-item"
                                     >
                                         Sign Up
