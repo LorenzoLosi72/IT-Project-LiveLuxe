@@ -9,15 +9,25 @@ function RentHome() {
     const [locations, setLocations] = useState([]);
     const [categories, setCategories] = useState([]);
     const [minEndDate, setMinEndDate] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
+    const [userID, setUserID] = useState(null);
 
-    // Recupera Locations dal server
+    // To get userId
+    useEffect(() => {
+        axios.post('http://localhost:3001/api/user-data', { username: localStorage.getItem('username') })
+            .then((response) => setUserID(response.data.userid))
+            .catch((error) => console.error('Error fetching user data:', error));
+    }, []);
+
+    // to get locations
     useEffect(() => {
         axios.get('http://localhost:3001/api/locations')
             .then((response) => setLocations(response.data))
             .catch((error) => console.error('Error fetching locations:', error));
     }, []);
 
-    // Recupera Categories dal server
+    // to get locations categories
     useEffect(() => {
         axios.get('http://localhost:3001/api/categories')
             .then((response) => setCategories(response.data))
@@ -29,6 +39,44 @@ function RentHome() {
         setMinEndDate(startDate);
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+
+        const data = {
+            name: form.formName.value,
+            bedrooms: parseInt(form.formBedrooms.value, 10),
+            kitchen: parseInt(form.formKitchen.value, 10),
+            parking: parseInt(form.formParking.value, 10),
+            pool: parseInt(form.formPool.value, 10),
+            wifi: parseInt(form.formWifi.value, 10),
+            airConditioning: parseInt(form.formAirConditioning.value, 10),
+            notes: form.formNotes.value || null,
+            address: form.formAddress.value,
+            locationID: parseInt(form.formLocationID.value, 10),
+            categoryID: parseInt(form.formCategoryID.value, 10),
+            guestsNumber: parseInt(form.formGuestsNumber.value, 10),
+            userID: userID,
+        };
+
+        if (!userID) {
+            setError('Failed to retrieve user information. Please log in again.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3001/api/register-property', data);
+            if (response.status === 200) {
+                setSuccess(true);
+                setError('');
+            }
+        } catch (err) {
+            console.error(err);
+            setError('Failed to register the property. Please try again.');
+            setSuccess(false);
+        }
+    };
+
     return (
         <div className="d-flex flex-column min-vh-100">
             <PublicHeader />
@@ -37,7 +85,9 @@ function RentHome() {
                 <p className="rent-home-warning text-center mb-4">
                     Please insert truthful information. If you provide false data, your account will be deleted.
                 </p>
-                <Form>
+                {success && <p className="text-success">Property registered successfully!</p>}
+                {error && <p className="text-danger">{error}</p>}
+                <Form onSubmit={handleSubmit}>
                     <Row>
                         <Col md={6}>
                             <Form.Group controlId="formName" className="mb-3">
@@ -147,36 +197,6 @@ function RentHome() {
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </Form.Select>
-                            </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                            <Form.Group controlId="formPhotos" className="mb-3">
-                                <Form.Label>Upload Photos</Form.Label>
-                                <Form.Control type="file" multiple accept="image/*" required />
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <Form.Group controlId="formAvailabilityStart" className="mb-3">
-                                <Form.Label>Available From</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    placeholder="Start date"
-                                    required
-                                    onChange={handleStartDateChange}
-                                />
-                            </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                            <Form.Group controlId="formAvailabilityEnd" className="mb-3">
-                                <Form.Label>Available To</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    placeholder="End date"
-                                    required
-                                    min={minEndDate}
-                                />
                             </Form.Group>
                         </Col>
                     </Row>

@@ -56,7 +56,8 @@ app.post('/api/user-data', (req, res) => {
         connection.end();
     });
 });
-//Location API 
+
+// Location API
 app.get('/api/locations', (req, res) => {
     const connection = createConnection();
     const query = 'SELECT LocationID, City FROM locations';
@@ -73,7 +74,7 @@ app.get('/api/locations', (req, res) => {
     });
 });
 
-//Categories API 
+// Categories API
 app.get('/api/categories', (req, res) => {
     const connection = createConnection();
     const query = 'SELECT CategoryID, Name FROM categories';
@@ -90,10 +91,7 @@ app.get('/api/categories', (req, res) => {
     });
 });
 
-
-
-
-// Register API
+// Register user API
 app.post('/api/register', (req, res) => {
     const {
         firstName,
@@ -105,8 +103,6 @@ app.post('/api/register', (req, res) => {
         username,
         password,
     } = req.body;
-
-    console.log("Data received:", req.body); // Log per verificare i dati
 
     if (!mail || !username || !password) {
         res.status(400).send("Mail, username, and password are required.");
@@ -145,6 +141,65 @@ app.post('/api/register', (req, res) => {
             );
         }
     });
+});
+
+// Register Property API
+app.post('/api/register-property', (req, res) => {
+    const {
+        name,
+        bedrooms,
+        kitchen,
+        parking,
+        pool,
+        wifi,
+        airConditioning,
+        notes,
+        address,
+        locationID,
+        categoryID,
+        guestsNumber,
+        userID 
+    } = req.body;
+
+    if (!userID) {
+        res.status(400).send("UserID is required to register a property.");
+        return;
+    }
+
+    const connection = createConnection();
+    const query = `
+        INSERT INTO properties 
+        (Name, Bedrooms, Kitchen, Parking, Pool, WIFI, AirConditioning, Notes, Address, UserID, LocationID, CategoryID, GuestsNumber)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    connection.query(
+        query,
+        [
+            name,
+            bedrooms,
+            kitchen,
+            parking,
+            pool,
+            wifi,
+            airConditioning,
+            notes || null,
+            address,
+            userID,
+            locationID,
+            categoryID,
+            guestsNumber,
+        ],
+        (err, results) => {
+            if (err) {
+                console.error("Error registering property:", err.message);
+                res.status(500).send("Error registering property.");
+            } else {
+                res.status(200).send("Property registered successfully!");
+            }
+
+            connection.end();
+        }
+    );
 });
 
 app.listen(PORT, () => {
