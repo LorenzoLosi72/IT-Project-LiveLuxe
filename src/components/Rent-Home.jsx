@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import axios from 'axios';
 import '../css/rent-home.css';
 import PublicHeader from './Public-Header.jsx';
 import GlobalFooter from './Global-Footer.jsx';
 
 function RentHome() {
+    const [locations, setLocations] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [minEndDate, setMinEndDate] = useState('');
+
+    // Recupera Locations dal server
+    useEffect(() => {
+        axios.get('http://localhost:3001/api/locations')
+            .then((response) => setLocations(response.data))
+            .catch((error) => console.error('Error fetching locations:', error));
+    }, []);
+
+    // Recupera Categories dal server
+    useEffect(() => {
+        axios.get('http://localhost:3001/api/categories')
+            .then((response) => setCategories(response.data))
+            .catch((error) => console.error('Error fetching categories:', error));
+    }, []);
 
     const handleStartDateChange = (e) => {
         const startDate = e.target.value;
@@ -31,7 +48,14 @@ function RentHome() {
                         <Col md={6}>
                             <Form.Group controlId="formLocationID" className="mb-3">
                                 <Form.Label>Location</Form.Label>
-                                <Form.Control type="number" placeholder="Enter location ID" required min="0" />
+                                <Form.Select required>
+                                    <option value="">Select a City</option>
+                                    {locations.map((location) => (
+                                        <option key={location.LocationID} value={location.LocationID}>
+                                            {location.City}
+                                        </option>
+                                    ))}
+                                </Form.Select>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -45,7 +69,14 @@ function RentHome() {
                         <Col md={6}>
                             <Form.Group controlId="formCategoryID" className="mb-3">
                                 <Form.Label>Category</Form.Label>
-                                <Form.Control type="number" placeholder="Enter category ID" required min="0" />
+                                <Form.Select required>
+                                    <option value="">Select a Category</option>
+                                    {categories.map((category) => (
+                                        <option key={category.CategoryID} value={category.CategoryID}>
+                                            {category.Name}
+                                        </option>
+                                    ))}
+                                </Form.Select>
                             </Form.Group>
                         </Col>
                     </Row>

@@ -56,6 +56,42 @@ app.post('/api/user-data', (req, res) => {
         connection.end();
     });
 });
+//Location API 
+app.get('/api/locations', (req, res) => {
+    const connection = createConnection();
+    const query = 'SELECT LocationID, City FROM locations';
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching locations:", err.message);
+            res.status(500).send("Error fetching locations.");
+        } else {
+            res.status(200).json(results);
+        }
+
+        connection.end();
+    });
+});
+
+//Categories API 
+app.get('/api/categories', (req, res) => {
+    const connection = createConnection();
+    const query = 'SELECT CategoryID, Name FROM categories';
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching categories:", err.message);
+            res.status(500).send("Error fetching categories.");
+        } else {
+            res.status(200).json(results);
+        }
+
+        connection.end();
+    });
+});
+
+
+
 
 // Register API
 app.post('/api/register', (req, res) => {
