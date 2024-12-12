@@ -91,7 +91,6 @@ app.get('/api/categories', (req, res) => {
     });
 });
 
-// Register user API
 app.post('/api/register', (req, res) => {
     const {
         firstName,
@@ -102,6 +101,7 @@ app.post('/api/register', (req, res) => {
         mail,
         username,
         password,
+        isHost, 
     } = req.body;
 
     if (!mail || !username || !password) {
@@ -123,11 +123,11 @@ app.post('/api/register', (req, res) => {
         } else {
             const insertQuery = `
                 INSERT INTO users (FirstName, LastName, DoB, TelephoneNumber, Address, Mail, Username, Password, IsHost)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`; 
 
             connection.query(
                 insertQuery,
-                [firstName, lastName, dob, phoneNumber, address, mail, username, password, 0],
+                [firstName, lastName, dob, phoneNumber, address, mail, username, password, isHost],
                 (insertErr, insertResults) => {
                     if (insertErr) {
                         console.error("Error registering user:", insertErr.message);
@@ -142,6 +142,7 @@ app.post('/api/register', (req, res) => {
         }
     });
 });
+
 
 // Register Property API
 app.post('/api/register-property', (req, res) => {

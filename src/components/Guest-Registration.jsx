@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -7,9 +7,16 @@ import '../css/guest-registration.css';
 function GuestRegistration() {
     const navigate = useNavigate();
     const [passwordError, setPasswordError] = useState(false);
-    const [dobError, setDobError] = useState(false); 
+    const [dobError, setDobError] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [maxDate, setMaxDate] = useState('');  //max date
+    useEffect(() => {
+        const today = new Date();
+        const eighteenYearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
+        const formattedDate = eighteenYearsAgo.toISOString().split('T')[0];  // Format as YYYY-MM-DD
+        setMaxDate(formattedDate);
+    }, []);
 
     const handleClose = () => {
         navigate('/');
@@ -49,21 +56,20 @@ function GuestRegistration() {
         const address = form.formAddress.value;
         const password = form.password.value;
         const confirmPassword = form.confirmPassword.value;
-
-        
+        const isHost = form.isHost.checked ? 1 : 0; 
+    
         if (password !== confirmPassword) {
             setPasswordError(true);
             return;
         }
         setPasswordError(false);
-
-        
+    
         if (!isAtLeast18YearsOld(dob)) {
             setDobError(true);
             return;
         }
         setDobError(false);
-
+    
         try {
             const hashedPassword = await hashPassword(password);
             const response = await axios.post('http://localhost:3001/api/register', {
@@ -75,9 +81,9 @@ function GuestRegistration() {
                 phoneNumber,
                 address,
                 password: hashedPassword,
-                isHost: 0,
+                isHost, 
             });
-
+    
             if (response.status === 200) {
                 setSuccess(true);
                 navigate('/login');
@@ -87,6 +93,7 @@ function GuestRegistration() {
             setError('Registration failed. Please try again.');
         }
     };
+    
 
     return (
         <Container className="signup-container position-relative">
@@ -113,7 +120,11 @@ function GuestRegistration() {
 
                         <Form.Group controlId="formBirthdate" className="mb-2">
                             <Form.Label>Date of Birth</Form.Label>
-                            <Form.Control type="date" required />
+                            <Form.Control 
+                                type="date" 
+                                required 
+                                max={maxDate}  // Set the max date to 18 years ago
+                            />
                             {dobError && <p className="text-danger">You must be at least 18 years old.</p>}
                         </Form.Group>
 
@@ -170,6 +181,14 @@ function GuestRegistration() {
                 <Form.Group controlId="formEmail" className="mb-2">
                     <Form.Label>Email</Form.Label>
                     <Form.Control type="email" placeholder="Enter your email" required />
+                </Form.Group>
+                <Form.Group controlId="formIsHost" className="mb-3">
+                    <Form.Label>Register as Host?</Form.Label>
+                    <Form.Check
+                        type="checkbox"
+                        name="isHost"
+                        label={<span style={{ color: '#ffffff' }}>Yes, I want to be a host</span>}
+                    />
                 </Form.Group>
 
                 {passwordError && (
