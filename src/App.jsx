@@ -6,7 +6,7 @@ import Login from './components/Login.jsx';
 import GuestRegistration from './components/Guest-Registration.jsx';
 import RentHome from './components/Rent-Home.jsx';
 import UserAccount from './components/User-Account.jsx';
-import Bookings from './components/Booking.jsx'; 
+import UserBooking from './components/User-Booking.jsx'; 
 import HostBooking from './components/Host-Booking.jsx'; 
 import { AuthContext } from './Auth-Context';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -68,10 +68,10 @@ function App() {
                             }
                         />
                         <Route
-                            path="/booking"
+                            path="/user-booking"
                             element={
                                 <ProtectedRoute>
-                                    <Bookings />
+                                    <UserBooking />
                                 </ProtectedRoute>
                             }
                         />

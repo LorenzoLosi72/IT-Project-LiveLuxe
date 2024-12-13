@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Bookings() {
+function UserBooking() {
     return (
         <div className="container">
             <h1>Le Tue Prenotazioni</h1>
@@ -9,4 +9,4 @@ function Bookings() {
     );
 }
 
-export default Bookings;
+export default UserBooking;
