@@ -7,7 +7,7 @@ import Logo from '../images/logos/logo.png';
 import '../css/public-header.css';
 
 function PublicHeader() {
-    const { isLoggedIn, logout } = useContext(AuthContext);
+    const { isLoggedIn, userRole, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -22,7 +22,11 @@ function PublicHeader() {
     return (
         <Navbar className="public-header">
             <Container fluid>
-                <Navbar.Brand onClick={() => handleNavigate('/')} className="d-flex align-items-center" style={{ cursor: 'pointer' }}>
+                <Navbar.Brand
+                    onClick={() => handleNavigate('/')}
+                    className="d-flex align-items-center"
+                    style={{ cursor: 'pointer' }}
+                >
                     <img
                         alt="LiveLuxe-Logo"
                         src={Logo}
@@ -36,12 +40,28 @@ function PublicHeader() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav className="ms-auto">
-                        {isLoggedIn && (
+                        {isLoggedIn && userRole === 'host' && (
+                            <>
+                                <Nav.Link
+                                    onClick={() => handleNavigate('/rent-home')}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    Rent Your Home
+                                </Nav.Link>
+                                <Nav.Link
+                                    onClick={() => handleNavigate('/host-bookings')}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    Manage Bookings
+                                </Nav.Link>
+                            </>
+                        )}
+                        {isLoggedIn && userRole === 'client' && (
                             <Nav.Link
-                                onClick={() => handleNavigate('/rent-home')}
+                                onClick={() => handleNavigate('/bookings')}
                                 style={{ cursor: 'pointer' }}
                             >
-                                Rent Your Home
+                                Your booking 
                             </Nav.Link>
                         )}
                     </Nav>

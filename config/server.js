@@ -19,10 +19,14 @@ app.post('/api/login', (req, res) => {
         } else if (user.length === 0) {
             res.status(401).send("Invalid username or password.");
         } else {
-            res.status(200).json(user[0]);
+            res.status(200).json({
+                username: user[0].Username,
+                isHost: user[0].IsHost, 
+            });
         }
     });
 });
+
 
 // Get User Data API
 app.post('/api/user-data', (req, res) => {

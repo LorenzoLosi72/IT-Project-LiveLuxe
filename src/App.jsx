@@ -6,6 +6,8 @@ import Login from './components/Login.jsx';
 import GuestRegistration from './components/Guest-Registration.jsx';
 import RentHome from './components/Rent-Home.jsx';
 import UserAccount from './components/User-Account.jsx';
+import Bookings from './components/Booking.jsx'; 
+import HostBooking from './components/Host-Booking.jsx'; 
 import { AuthContext } from './Auth-Context';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/app.css';
@@ -22,16 +24,18 @@ function ProtectedRoute({ children }) {
     );
 }
 
-// Layout component to manage headers and search bar visibility
+// Layout component to manage headers based on type of user
 function Layout({ children }) {
     const location = useLocation();
-    const showSearchBar = location.pathname === '/'; // Show search bar only on homepage
-    const showHeader = location.pathname !== '/rent-home'; // Hide header on /rent-home
+    const { userRole } = useContext(AuthContext); // Get  user role from AuthContext
+
+    const showSearchBar = location.pathname === '/' && userRole !== 'host'; // Hide search bar for hosts
+    const showHeader = location.pathname !== '/rent-home'; // Hide header in rent-home
 
     return (
         <>
             {showHeader && <PublicHeader />}
-            {showSearchBar && <PublicSearchbar />}
+            {showSearchBar && <PublicSearchbar />} 
             <main className="flex-fill">{children}</main>
         </>
     );
@@ -60,6 +64,22 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <UserAccount />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/booking"
+                            element={
+                                <ProtectedRoute>
+                                    <Bookings />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/host-booking"
+                            element={
+                                <ProtectedRoute>
+                                    <HostBooking />
                                 </ProtectedRoute>
                             }
                         />

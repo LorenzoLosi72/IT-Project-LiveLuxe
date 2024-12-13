@@ -31,7 +31,10 @@ function Login() {
                 username,
                 password: hashedPassword,
             });
-            login(username);
+
+            const { isHost } = response.data; // Estrarre il ruolo dell'utente
+            login(username, isHost); // Passare il ruolo al contesto
+
             // Redirect alla pagina precedente o all'account utente
             const redirectPath = location.state?.from?.pathname || '/user-account';
             navigate(redirectPath);
