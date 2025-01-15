@@ -1,34 +1,40 @@
-.global-footer {
+.footer {
     background-color: #171717;
     color: #f7f7f7ef;
     padding: 40px 10px;
 }
 
-.global-footer h5 {
+.footer h5 {
     font-size: 20px;
     font-weight: 500;
     margin-bottom: 15px;
 }
 
-.global-footer p {
+.footer p {
     font-size: 15px;
     margin: 10px 0;
     font-weight: 500;
 }
 
-.global-footer i {
+.footer i {
     font-size: 15px;
     color: #D6AD60;
     margin-right: 15px;
 }
 
-.global-footer .d-flex a {
+.footer .d-flex a {
     color: #D6AD60;
 }
 
-.global-footer .d-flex a:hover {
+.footer .d-flex a:hover {
     transform: scale(1.2);
 }
+
+.footer .text-center p:hover {
+    color: #D6AD60;
+    cursor: pointer;
+}
+
 
 
 

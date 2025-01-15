@@ -1,18 +1,26 @@
 import React, { useState, useContext } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../Auth-Context';
+
+import { Form, Button, Container } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import '../css/login.css';
 
+// React component that represent the login form of the application.
 function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const { login } = useContext(AuthContext);
+
+    // States for input fields
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
 
+    // Creating SHA-256 hash password to send to server.
     const hashPassword = async (password) => {
         const encoder = new TextEncoder();
         const data = encoder.encode(password);
@@ -22,20 +30,18 @@ function Login() {
             .join('');
     };
 
+    // Login management
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Page refresh prevention
 
         try {
-            const hashedPassword = await hashPassword(password);
-            const response = await axios.post('http://localhost:3001/api/login', {
-                username,
-                password: hashedPassword,
-            });
+            const hashedPassword = await hashPassword(password); // Creating hash password.
+            const response = await axios.post('http://localhost:3001/api/login', { username, password: hashedPassword, }); // Send a POST request to the server with the login data.
 
-            const { isHost } = response.data; // Estrarre il ruolo dell'utente
-            login(username, isHost); // Passare il ruolo al contesto
+            const { isHost } = response.data; // Extract user role.
+            login(username, isHost); // Pass username and role corresponding to the context.
 
-            // Redirect alla pagina precedente o all'account utente
+            // Redirect
             const redirectPath = location.state?.from?.pathname || '/user-account';
             navigate(redirectPath);
         } catch (err) {
@@ -44,37 +50,28 @@ function Login() {
         }
     };
 
+    // Login graphic form component
     return (
         <Container className="login-container position-relative d-flex flex-column align-items-center">
             <h2>Sign In</h2>
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formUsername" className="mb-2">
                     <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Enter your Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
+                    <Form.Control type="text" placeholder="Enter your Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
                 </Form.Group>
 
-                <Form.Group controlId="formPassword" className="mb-2">
+                <Form.Group controlId="formPassword" className="mb-2 position-relative">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+                    <Form.Control type={showPassword ? "text" : "password"} placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required  />
+                    <FontAwesomeIcon className="password-icon" icon={showPassword ? faEyeSlash : faEye} onClick={() => setShowPassword(!showPassword)}/>
                 </Form.Group>
 
                 {error && <p className="text-danger">{error}</p>}
 
-                <Button variant="primary" type="submit" className="w-100 mt-2">
-                    Login
-                </Button>
+                <Button variant="primary" type="submit" className="w-100 mt-2"> Login </Button>
+
+                <p className="mt-4 text-center"> Don't have an account?{' '} <Link to="/registration" className="registration-link"> Sign up </Link></p>
+
             </Form>
         </Container>
     );

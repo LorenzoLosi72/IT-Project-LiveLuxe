@@ -1,9 +1,12 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import PublicHeader from './components/Public-Header.jsx';
-import PublicSearchbar from './components/Public-Searchbar.jsx';
+import Header from './components/Header.jsx';
+import Searchbar from './components/Searchbar.jsx';
+import CardHouse from './components/Card-House.jsx';
+import Footer from './components/Footer.jsx';
 import Login from './components/Login.jsx';
-import GuestRegistration from './components/Guest-Registration.jsx';
+import Delimiter from './components/Delimiter.jsx';
+import Registration from './components/Registration.jsx';
 import RentHome from './components/Rent-Home.jsx';
 import UserAccount from './components/User-Account.jsx';
 import UserBooking from './components/User-Booking.jsx'; 
@@ -34,9 +37,16 @@ function Layout({ children }) {
 
     return (
         <>
-            {showHeader && <PublicHeader />}
-            {showSearchBar && <PublicSearchbar />} 
+            {showHeader && <Header />}
+            {showSearchBar && 
+            <>
+             <Searchbar/>
+             <Delimiter/>
+             <CardHouse/>
+            </>
+            }
             <main className="flex-fill">{children}</main>
+            
         </>
     );
 }
@@ -50,7 +60,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<div></div>} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/guest-registration" element={<GuestRegistration />} />
+                        <Route path="/registration" element={<Registration />} />
                         <Route
                             path="/rent-home"
                             element={
@@ -85,6 +95,7 @@ function App() {
                         />
                     </Routes>
                 </Layout>
+                <Footer/>
             </div>
         </Router>
     );

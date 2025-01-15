@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import '../css/rent-home.css';
-import PublicHeader from './Public-Header.jsx';
-import GlobalFooter from './Global-Footer.jsx';
+import Header from './Header.jsx';
+import GlobalFooter from './Footer.jsx';
 
 function RentHome() {
     const [locations, setLocations] = useState([]);
@@ -79,7 +79,7 @@ function RentHome() {
 
     return (
         <div className="d-flex flex-column min-vh-100">
-            <PublicHeader />
+            <Header />
             <Container className="rent-home-container mt-4 flex-grow-1">
                 <h1 className="rent-home-title text-center mb-2">Rent Your Home</h1>
                 <p className="rent-home-warning text-center mb-4">
