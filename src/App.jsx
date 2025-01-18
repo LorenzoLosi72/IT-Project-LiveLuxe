@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
 import Header from './components/Header.jsx';
 import Searchbar from './components/Searchbar.jsx';
 import CardHouse from './components/Card-House.jsx';
@@ -12,6 +13,7 @@ import UserAccount from './components/User-Account.jsx';
 import UserBooking from './components/User-Booking.jsx'; 
 import HostBooking from './components/Host-Booking.jsx'; 
 import { AuthContext } from './Auth-Context';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/app.css';
 
@@ -20,11 +22,7 @@ function ProtectedRoute({ children }) {
     const { isLoggedIn } = useContext(AuthContext);
     const location = useLocation();
 
-    return isLoggedIn ? (
-        children
-    ) : (
-        <Navigate to="/login" state={{ from: location }} />
-    );
+    return isLoggedIn ? (children) : (<Navigate to="/login" state={{ from: location }} />);
 }
 
 // Layout component to manage headers based on type of user
@@ -38,27 +36,29 @@ function Layout({ children }) {
     return (
         <>
             {showHeader && <Header />}
-            {showSearchBar && 
-            <>
-             <Searchbar/>
-             <Delimiter/>
-             <CardHouse/>
-            </>
-            }
             <main className="flex-fill">{children}</main>
-            
         </>
     );
 }
 
 // App component
 function App() {
+    const [searchResults, setSearchResults] = useState(null); // State to store search results
+
     return (
         <Router>
             <div className="d-flex flex-column min-vh-100">
                 <Layout>
                     <Routes>
-                        <Route path="/" element={<div></div>} />
+                        <Route path="/" 
+                            element={
+                                <>
+                                <Searchbar onSearch={setSearchResults} />
+                                <Delimiter />
+                                <CardHouse searchResults={searchResults} />
+                                </>
+                            } 
+                        />
                         <Route path="/login" element={<Login />} />
                         <Route path="/registration" element={<Registration />} />
                         <Route

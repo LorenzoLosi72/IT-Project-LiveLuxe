@@ -140,6 +140,68 @@ app.post('/api/user-data', (req, res) => {
     });
 });
 
+// Search and Advanced search API
+app.post('/api/search', (req, res) => {
+    const { destination, checkIn, checkOut, guestsNumber, hasKitchen, hasParking, hasAC, hasWiFi, hasPool, bedrooms, budget } = req.body;
+
+    console.log("Received search parameters:", req.body);
+
+    const connection = createConnection();
+
+    // Basic query
+    let query = `
+        SELECT 
+            p.PropertyID AS id,
+            p.Name AS name,
+            CONCAT(u.FirstName, ' ', u.LastName) AS hostName,
+            l.City AS city,
+            l.State AS state,
+            a.PricePerNight AS pricePerNight,
+            a.StartDate AS startDate,
+            a.EndDate AS endDate,
+            GROUP_CONCAT(i.Image SEPARATOR ',') AS images
+        FROM properties p
+        JOIN users u ON p.UserID = u.UserID
+        JOIN locations l ON p.LocationID = l.LocationID
+        JOIN availabilities a ON p.PropertyID = a.PropertyID
+        LEFT JOIN images i ON p.PropertyID = i.PropertyID
+        WHERE a.StartDate <= ? AND a.EndDate >= ?
+          AND (
+              l.City LIKE ? OR l.State LIKE ?
+          )
+          AND p.GuestsNumber >= ?`;
+
+    const params = [checkIn, checkOut, `%${destination}%`,`%${destination}%`, parseInt(guestsNumber)];
+
+    // Adding advanced filters
+    if (hasKitchen !== undefined) { query += hasKitchen ? ' AND p.Kitchen = 1' : ' AND p.Kitchen = 0'; }
+    if (hasParking !== undefined) { query += hasParking ? ' AND p.Parking = 1' : ' AND p.Parking = 0'; }
+    if (hasAC !== undefined) { query += hasAC ? ' AND p.AirConditioning = 1' : ' AND p.AirConditioning = 0'; }
+    if (hasWiFi !== undefined) { query += hasWiFi ? ' AND p.WIFI = 1' : ' AND p.WIFI = 0'; }
+    if (hasPool !== undefined) { query += hasPool ? ' AND p.Pool = 1' : ' AND p.Pool = 0'; }
+    if (bedrooms) { query += ' AND p.Bedrooms >= ?'; params.push(bedrooms); }
+    if (budget) { query += ' AND a.PricePerNight <= ?'; params.push(budget); }
+
+    console.log("Final query:", query);
+    console.log("Params:", params);
+
+
+    connection.query(query, params, (err, results) => {
+        if (err) {
+            console.error("Error executing search query:", err.message);
+            res.status(500).send("Error executing search query.");
+        } else {
+            const formattedResults = results.map(house => ({
+                ...house,
+                images: house.images ? house.images.split(',') : [],
+            }));
+            res.status(200).json(formattedResults);
+        }
+        connection.end();
+    });
+});
+
+
 // Location API
 app.get('/api/locations', (req, res) => {
     const connection = createConnection();
