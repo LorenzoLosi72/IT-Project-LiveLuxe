@@ -8,6 +8,8 @@ import Footer from './components/Footer.jsx';
 import Login from './components/Login.jsx';
 import Delimiter from './components/Delimiter.jsx';
 import Registration from './components/Registration.jsx';
+import HouseDescription from './components/House-Description.jsx';
+
 import RentHome from './components/Rent-Home.jsx';
 import UserAccount from './components/User-Account.jsx';
 import UserBooking from './components/User-Booking.jsx'; 
@@ -50,15 +52,15 @@ function App() {
             <div className="d-flex flex-column min-vh-100">
                 <Layout>
                     <Routes>
-                        <Route path="/" 
-                            element={
-                                <>
+                        <Route path="/" element={
+                            <>
                                 <Searchbar onSearch={setSearchResults} />
                                 <Delimiter />
                                 <CardHouse searchResults={searchResults} />
-                                </>
+                            </>
                             } 
                         />
+                        <Route path="/house/:id" element={ <HouseDescription /> } />
                         <Route path="/login" element={<Login />} />
                         <Route path="/registration" element={<Registration />} />
                         <Route

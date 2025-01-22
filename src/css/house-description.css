@@ -1,0 +1,72 @@
+.container-house-description {
+    margin-left: 50px;
+    margin-top: 30px;
+    margin-right: 50px;
+    margin-bottom: 150px;
+}
+
+.house-title {
+    font-size: 30px;
+    font-weight: 600;
+    color: #f7f7f7ef;
+    margin-left: 20px;
+}
+
+.container-house-description .house-carousel {
+    overflow: hidden;
+    position: relative;
+    border-radius: 30px;
+    border: 3px solid #D6AD60;
+}
+
+.container-house-description .house-carousel-image {
+    height: 500px;
+    width: 500px;
+    object-fit: cover;
+    border-radius: 26px;
+    overflow: hidden;
+}
+
+.container-house-description .house-location {
+    color: #f7f7f7ef; 
+    font-weight: 600; 
+    font-size: 25px;
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+.container-house-description .house-location .house-icon-location {
+    color:#D6AD60;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.container-house-description .house-guests-details {
+    color: #f7f7f7ef; 
+    font-weight: 600; 
+    font-size: 20px;
+    margin-left: 25px;
+    margin-top: 15px;
+}
+
+.container-house-description .house-guests-details .house-icon-guests {
+    color:#D6AD60;
+    margin-bottom: 5px;
+    margin-right: 8px;
+}
+
+.container-house-description .house-services-details {
+    color: #f7f7f7ef; 
+    font-weight: 600; 
+    font-size: 20px;
+    margin-left: 25px;
+}
+
+.container-house-description .house-services-details .icon-services{
+    color:#D6AD60;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+
+

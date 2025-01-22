@@ -144,7 +144,7 @@ app.post('/api/user-data', (req, res) => {
 app.post('/api/search', (req, res) => {
     const { destination, checkIn, checkOut, guestsNumber, hasKitchen, hasParking, hasAC, hasWiFi, hasPool, bedrooms, budget } = req.body;
 
-    console.log("Received search parameters:", req.body);
+    console.log("Received search parameters:", req.body); // Test
 
     const connection = createConnection();
 
@@ -182,8 +182,8 @@ app.post('/api/search', (req, res) => {
     if (bedrooms) { query += ' AND p.Bedrooms >= ?'; params.push(bedrooms); }
     if (budget) { query += ' AND a.PricePerNight <= ?'; params.push(budget); }
 
-    console.log("Final query:", query);
-    console.log("Params:", params);
+    console.log("Final query:", query); // Test
+    console.log("Params:", params);     // Test
 
 
     connection.query(query, params, (err, results) => {
@@ -198,6 +198,100 @@ app.post('/api/search', (req, res) => {
             res.status(200).json(formattedResults);
         }
         connection.end();
+    });
+});
+
+// House details API
+app.get('/api/house/:id', (req, res) => {
+    const houseId = req.params.id;
+
+    const connection = createConnection();
+
+    // Function close database connection 
+    const closeConnection = () => {
+        connection.end((err) => {
+            if(err) { console.error("Error closing the connection: ", err.message); }
+        });
+    }
+
+    // Details House Query
+    const houseQuery = `
+        SELECT 
+            p.PropertyID AS id,
+            p.Name AS name,
+            p.GuestsNumber AS guestsNumber,
+            p.Bedrooms AS bedrooms,
+            p.Kitchen AS kitchen,
+            p.WIFI AS wifi,
+            p.Parking AS parking,
+            p.Pool AS pool,
+            p.AirConditioning AS airConditioning,
+            p.Notes AS notes,
+            p.Address AS address,
+            l.City AS city,
+            l.State AS state,
+            CONCAT(u.FirstName, ' ', u.LastName) AS hostName,
+            GROUP_CONCAT(i.Image SEPARATOR ',') AS images
+        FROM properties p
+        JOIN users u ON p.UserID = u.UserID
+        JOIN locations l ON p.LocationID = l.LocationID
+        LEFT JOIN images i ON p.PropertyID = i.PropertyID
+        WHERE p.PropertyID = ?
+        GROUP BY p.PropertyID
+    `;
+
+    connection.query(houseQuery, [houseId], (err, houseResults) => {
+        if (err) { 
+            console.error("Error fetching house details:", err.message);
+            closeConnection();
+            res.status(500).send("Error fetching house details."); 
+        }
+        else if (houseResults.length === 0) {
+                closeConnection(); 
+                res.status(404).send("House not found."); 
+        }
+    
+        const houseDetails = houseResults[0];
+        houseDetails.images = houseDetails.images ? houseDetails.images.split(',') : [];
+
+        // Reviews House Query
+        const reviewQuery = `
+                SELECT r.Rating, r.TextReview, DATE_FORMAT(r.DateReview, '%Y-%m-%dT%H:%i:%sZ') AS dateReview, u.Username AS userName 
+                FROM reviews r
+                JOIN users u ON r.UserID = u.UserID
+                WHERE r.PropertyID = ?
+                ORDER BY r.DateReview DESC
+        `;
+
+        connection.query(reviewQuery, [houseId], (reviewErr, reviews) => {
+            if (reviewErr) {
+                console.error("Error fetching reviews:", reviewErr.message);
+                closeConnection();
+                return res.status(500).send("Error fetching reviews.");
+            }
+
+            // Availabilities House Query
+            const availabilityQuery = `
+                SELECT DATE_FORMAT(a.StartDate, '%Y-%m-%dT%H:%i:%s.000Z') AS startDate, DATE_FORMAT(a.EndDate, '%Y-%m-%dT%H:%i:%s.000Z') AS endDate, a.PricePerNight
+                FROM availabilities a
+                WHERE a.PropertyID = ?
+                AND a.StartDate >= CURDATE()
+                ORDER BY a.StartDate
+            `;
+
+            connection.query(availabilityQuery, [houseId], (availabilityErr, availabilities) => {
+                if (availabilityErr) {
+                    console.error("Error fetching availabilities:", availabilityErr.message);
+                    closeConnection();
+                    return res.status(500).send("Error fetching availabilities");
+                }
+
+
+                closeConnection();
+                res.status(200).json({...houseDetails, reviews, availabilities });
+
+            });
+        });
     });
 });
 
