@@ -28,8 +28,8 @@ function Header() {
         <Navbar className="public-header">
             <Container fluid>
                 <Navbar.Brand  className="d-flex align-items-center" onClick={() => { 
-                        if ((isLoggedIn) && (userRole === 'host')) { handleNavigate('/user-account')}
-                        else if ((isLoggedIn) && (userRole === 'client')) { handleNavigate('/user-account')}
+                        if ((isLoggedIn) && (userRole === 'host')) { handleNavigate('/')}
+                        else if ((isLoggedIn) && (userRole === 'client')) { handleNavigate('/')}
                         else { handleNavigate('/')}
                         }}>
                     <img className="d-inline-block align-top" alt="LiveLuxe-Logo" src={Logo} width="50" height="50"/>

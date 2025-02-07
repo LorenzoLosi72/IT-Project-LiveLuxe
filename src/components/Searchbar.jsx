@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
 import axios from "axios";
-
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import '../css/searchbar.css';
 
-// React component that represent the homepage search-bar component.
-const Searchbar = ( { onSearch } ) => {
-
-    // States for basic search
+const Searchbar = ({ onSearch }) => {
     const [destination, setDestination] = useState("");
     const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
     const [guestsNumber, setGuestsNumber] = useState("");
 
     // States for advanced search
-    const [hasKitchen, setHasKitchen] = useState(false); 
-    const [hasParking, setHasParking] = useState(false);  
-    const [hasAC, setHasAC] = useState(false);  
-    const [hasWiFi, setHasWiFi] = useState(false);  
-    const [hasPool, setHasPool] = useState(false);  
-    const [bedrooms, setBedrooms] = useState(1);  
-    const [budget, setBudget] = useState(500);  
+    const [hasKitchen, setHasKitchen] = useState(false);
+    const [hasParking, setHasParking] = useState(false);
+    const [hasAC, setHasAC] = useState(false);
+    const [hasWiFi, setHasWiFi] = useState(false);
+    const [hasPool, setHasPool] = useState(false);
+    const [bedrooms, setBedrooms] = useState(1);
+    const [budget, setBudget] = useState(500);
 
     const [showFilters, setShowFilters] = useState(false);
+
+    // Get today's date for the check-in minimum date
+    const today = new Date().toISOString().split('T')[0];
 
     // Toggle the filter pop-up visibility
     const handleToggleModalFilters = () => { setShowFilters(!showFilters); };
 
-    // Function for managing basic and advanced search
-    const handleSearch = async (e, isAdvanced = false) => { 
-        e.preventDefault(); 
-    
+    // Function to handle the search
+    const handleSearch = async (e, isAdvanced = false) => {
+        e.preventDefault();
+
         const searchParams = {
             destination,
             checkIn,
@@ -38,7 +37,7 @@ const Searchbar = ( { onSearch } ) => {
             guestsNumber,
         };
 
-        if(isAdvanced) {
+        if (isAdvanced) {
             searchParams.hasKitchen = hasKitchen;
             searchParams.hasParking = hasParking;
             searchParams.hasAC = hasAC;
@@ -52,29 +51,71 @@ const Searchbar = ( { onSearch } ) => {
             const response = await axios.post('http://localhost:3001/api/search', searchParams);
             console.log("Search results:", response.data);
             onSearch(response.data);
-            
-        } catch(error) { console.error("Error while searching", error); }
-    
+        } catch (error) {
+            console.error("Error while searching", error);
+        }
     };
 
-    // Search-bar graphic component.
-    return(
+    // Handle changes in the check-in date
+    const handleCheckInChange = (e) => {
+        const newCheckIn = e.target.value;
+        setCheckIn(newCheckIn);
+
+        // If the check-in date is greater than the check-out date, update check-out to be the same as check-in
+        if (newCheckIn > checkOut && checkOut !== "") {
+            setCheckOut(newCheckIn);
+        }
+    };
+
+    return (
         <div>
             <div className="searchbar-wrapper">
                 <form onSubmit={(e) => handleSearch(e)} className="container">
                     <div className="row align-items-center g-3">
                         <div className="col-md-4">
-                            <input className="form-control" type="text" placeholder="Destination" value={destination} onChange={(e) => setDestination(e.target.value)} required />
+                            <input
+                                className="form-control"
+                                type="text"
+                                placeholder="Destination"
+                                value={destination}
+                                onChange={(e) => setDestination(e.target.value)}
+                                required
+                            />
                         </div>
                         <div className="col-md-2">
-                            <input className="form-control" type="date" placeholder="Check-in" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} required />
+                            <input
+                                className="form-control"
+                                type="date"
+                                placeholder="Check-in"
+                                value={checkIn}
+                                onChange={handleCheckInChange}
+                                min={today} // Disable dates before today
+                                required
+                            />
                         </div>
                         <div className="col-md-2">
-                            <input className="form-control" type="date" placeholder="Check-out" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} required />
+                            <input
+                                className="form-control"
+                                type="date"
+                                placeholder="Check-out"
+                                value={checkOut}
+                                onChange={(e) => setCheckOut(e.target.value)}
+                                min={checkIn} // Check-out can't be before Check-in
+                                required
+                            />
                         </div>
 
                         <div className="col-md-1">
-                            <input className="form-control" type="number" placeholder="Who" value={guestsNumber} onChange={(e) => setGuestsNumber(e.target.value)} required min="1" max="20" />
+                            <input
+                                className="form-control"
+                                type="number"
+                                placeholder="Who"
+                                value={guestsNumber}
+                                onChange={(e) => setGuestsNumber(e.target.value)}
+                                required
+                                min="1"
+                                max="20"
+                            />
                         </div>
 
                         <div className="col-md-1">
@@ -128,8 +169,8 @@ const Searchbar = ( { onSearch } ) => {
                     <Row className="row-range-budget">
                         <Col md={12}>
                             <Form.Group controlId="budget">
-                            <Form.Label className="label">Price per night</Form.Label>
-                                <Form.Range min="50" max="1000" value={budget} onChange={(e) => setBudget(e.target.value)}/>
+                                <Form.Label className="label">Price per night</Form.Label>
+                                <Form.Range min="50" max="1000" value={budget} onChange={(e) => setBudget(e.target.value)} />
                                 <p className="text-center mt-2">{budget} $ </p>
                             </Form.Group>
                         </Col>
@@ -140,7 +181,6 @@ const Searchbar = ( { onSearch } ) => {
                     <Button variant="primary" onClick={(e) => { handleSearch(e, true); handleToggleModalFilters(); }} className="btn-footer"> Apply Filters </Button>
                 </Modal.Footer>
             </Modal>
-
         </div>
     );
 };
