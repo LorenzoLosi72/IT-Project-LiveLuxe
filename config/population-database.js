@@ -49,7 +49,7 @@ async function main() {
 
     await clearTables(connection);
 
-    populateTables(connection);
+     populateTables(connection);
 
     connection.end();
 }

@@ -42,7 +42,7 @@ function Login() {
             login(username, isHost); // Pass username and role corresponding to the context.
 
             // Redirect
-            const redirectPath = location.state?.from?.pathname || '/user-account';
+            const redirectPath = location.state?.from?.pathname || '/';
             navigate(redirectPath);
         } catch (err) {
             console.error('Authentication failed:', err.response?.data || err.message);
