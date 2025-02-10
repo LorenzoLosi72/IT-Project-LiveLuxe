@@ -80,6 +80,8 @@
     background-color: #171717;
     padding: 15px;
     border-radius: 15px;
+    border: 1px solid #D6AD60;
+
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
@@ -91,7 +93,7 @@
 .react-calendar {
     background-color: #171717;
     color: #ffffff;
-    border: 1px solid #171717;
+    border: 1px solid #D6AD60;
     width: 100%;
     max-width: 350px;
     margin: 0 auto;
@@ -130,4 +132,22 @@
     color: #ffffff;
     font-weight: 600;
     font-size: 20px;
+}
+/* For the unavailable day*/
+.react-calendar__tile--disabled {
+    background-color: red; 
+    color: #171717;  
+    pointer-events: none; 
+}
+
+.react-calendar__tile--available {
+    background-color: white!important;
+    color: white !important;
+}
+
+.react-calendar__tile--available .calendar-price {
+    display: block;
+    font-size: 12px;
+    color: green !important; 
+    margin-top: 5px;
 }

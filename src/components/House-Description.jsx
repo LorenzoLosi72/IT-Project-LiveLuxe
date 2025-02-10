@@ -11,7 +11,6 @@ const HouseDescription = () => {
     const { id } = useParams();
     const [house, setHouse] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [availability, setAvailability] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [activeDate, setActiveDate] = useState(new Date());
 
@@ -19,7 +18,6 @@ const HouseDescription = () => {
         const fetchHouseDetails = async () => {
             try {
                 const response = await axios.get(`http://localhost:3001/api/house/${id}`);
-                console.log("House data:", response.data);
                 setHouse(response.data);
             } catch (error) {
                 console.error("Error fetching house details:", error);
@@ -30,21 +28,6 @@ const HouseDescription = () => {
         fetchHouseDetails();
     }, [id]);
 
-    useEffect(() => {
-        const fetchAvailability = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3001/api/house/${id}/availability`);
-                console.log("Availability dates:", response.data);
-
-                const availableDates = response.data.map(date => new Date(date));
-                setAvailability(availableDates);
-            } catch (error) {
-                console.error("Error fetching availability:", error);
-            }
-        };
-        fetchAvailability();
-    }, [id]);
-
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
@@ -53,27 +36,49 @@ const HouseDescription = () => {
         setActiveDate(activeStartDate); 
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (!house) return <div>House not found.</div>;
+    const isAvailable = (date) => {
+        const dateToCheck = new Date(date).setHours(0, 0, 0, 0);
+        if (!house.availabilities || house.availabilities.length === 0) {
+            return true;
+        }
 
-    const tileDisabled = ({ date }) => {
-        const normalizedDate = new Date(date);
-        normalizedDate.setHours(0, 0, 0, 0);
-        return !availability.some(availableDate => 
-            availableDate.getTime() === normalizedDate.getTime()
-        );
-    };
-
-    const tileClassName = ({ date, view }) => {
-        if (view === 'month') {
-            const currentMonth = activeDate.getMonth();
-            const currentYear = activeDate.getFullYear();
-            if (date.getMonth() !== currentMonth || date.getFullYear() !== currentYear) {
-                return 'react-calendar__tile--disabled';
+        for (const availability of house.availabilities) {
+            const startDate = new Date(availability.startDate).setHours(0, 0, 0, 0);
+            const endDate = new Date(availability.endDate).setHours(0, 0, 0, 0);
+            if (dateToCheck >= startDate && dateToCheck <= endDate) {
+                return availability.PricePerNight;
             }
         }
         return null;
     };
+
+    const tileClassName = ({ date, view }) => {
+        if (view === 'month') {
+            const price = isAvailable(date);
+            if (price === null) {
+                return 'react-calendar__tile--disabled';
+            }
+            return null;
+        }
+        return null;
+    };
+
+    const tileContent = ({ date, view }) => {
+        if (view === 'month') {
+            const price = isAvailable(date);
+            if (price !== null) {
+                return (
+                    <div className="calendar-price">
+                        <span>${price}</span>
+                    </div>
+                );
+            }
+        }
+        return null;
+    };
+
+    if (loading) return <div>Loading...</div>;
+    if (!house) return <div>House not found.</div>;
 
     const advancedServices = [
         { name: "Kitchen", icon: <FaUtensils className="icon-services" />, available: house.kitchen },
@@ -106,11 +111,11 @@ const HouseDescription = () => {
                     <Calendar
                         onChange={handleDateChange}
                         value={selectedDate}
-                        tileDisabled={tileDisabled}
-                        tileClassName={tileClassName}  
+                        tileClassName={tileClassName}
+                        tileContent={tileContent}
                         view="month"
-                        onActiveDateChange={handleActiveDateChange}  
-                        showNeighboringMonth={false} 
+                        onActiveDateChange={handleActiveDateChange}
+                        showNeighboringMonth={false}
                     />
                 </Col>
             </Row>

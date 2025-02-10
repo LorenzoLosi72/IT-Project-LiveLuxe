@@ -311,6 +311,34 @@ app.get('/api/locations', (req, res) => {
         connection.end();
     });
 });
+app.get('/api/house/:id/availability', (req, res) => {
+    const connection = createConnection(); // Crea la connessione al database
+    const houseId = parseInt(req.params.id, 10); // Ottieni l'ID dalla URL
+
+    // Stampa un messaggio per confermare che la richiesta è stata ricevuta
+    console.log(`We are in house ${houseId}`);
+
+    const query = 'SELECT StartDate, EndDate FROM availabilities WHERE PropertyID = ?';
+
+    connection.query(query, [houseId], (err, results) => {
+        if (err) {
+            // In caso di errore, stampa l'errore e restituisci una risposta 500
+            console.error('Errore durante l\'esecuzione della query:', err);
+            return res.status(500).json({ message: 'Errore del server.' });
+        }
+
+        // Risposta vuota se non ci sono disponibilità
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Nessuna disponibilità trovata per questa casa.' });
+        }
+
+        // Se i dati sono stati trovati, invia i risultati
+        res.json(results);
+    });
+
+    // Chiudi la connessione solo dopo aver completato la query
+    connection.end();
+});
 
 // Categories API
 app.get('/api/categories', (req, res) => {
