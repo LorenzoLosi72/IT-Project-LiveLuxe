@@ -295,59 +295,6 @@ app.get('/api/house/:id', (req, res) => {
     });
 });
 
-// API per recuperare le date disponibili di una casa
-app.get('/api/house/:id/availability', (req, res) => {
-    const houseId = req.params.id;
-
-    const connection = createConnection();
-
-    const query = `
-        SELECT 
-            DATE_FORMAT(StartDate, '%Y-%m-%d') AS startDate, 
-            DATE_FORMAT(EndDate, '%Y-%m-%d') AS endDate, 
-            UnavailableDates 
-        FROM availabilities 
-        WHERE PropertyID = ? AND StartDate >= CURDATE()
-    `;
-
-    connection.query(query, [houseId], (err, results) => {
-        if (err) {
-            console.error("Errore durante il recupero delle disponibilità:", err.message);
-            res.status(500).send("Errore durante il recupero delle disponibilità.");
-            connection.end();
-            return;
-        }
-
-        if (results.length === 0) {
-            res.status(404).send("Disponibilità non trovata per questa casa.");
-            connection.end();
-            return;
-        }
-
-        // Estrarre tutte le date disponibili
-        const availability = results.map(({ startDate, endDate, UnavailableDates }) => {
-            const unavailableDates = UnavailableDates ? JSON.parse(UnavailableDates) : [];
-            const allDates = [];
-            let currentDate = new Date(startDate);
-
-            while (currentDate <= new Date(endDate)) {
-                const formattedDate = currentDate.toISOString().split('T')[0];
-                if (!unavailableDates.includes(formattedDate)) {
-                    allDates.push(formattedDate);
-                }
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-
-            return allDates;
-        });
-
-        const flatAvailability = [].concat(...availability);
-
-        res.status(200).json(flatAvailability);
-        connection.end();
-    });
-});
-
 // Location API
 app.get('/api/locations', (req, res) => {
     const connection = createConnection();

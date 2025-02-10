@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import { Carousel, Row, Col } from "react-bootstrap";
 import { FaMapMarkerAlt, FaUserFriends, FaBed, FaUtensils, FaWifi, FaSwimmer, FaCar, FaSnowflake } from "react-icons/fa";
 import "../css/house-description.css";
@@ -11,8 +9,6 @@ const HouseDescription = () => {
     const { id } = useParams();
     const [house, setHouse] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [availability, setAvailability] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());
 
     // Recupera i dettagli della casa
     useEffect(() => {
@@ -30,39 +26,8 @@ const HouseDescription = () => {
         fetchHouseDetails();
     }, [id]);
 
-    // Recupera le date disponibili dalla API
-    useEffect(() => {
-        const fetchAvailability = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3001/api/house/${id}/availability`);
-                console.log("Availability dates:", response.data);
-
-                // Convertiamo le stringhe di date in oggetti Date
-                const availableDates = response.data.map(date => new Date(date));
-                setAvailability(availableDates);
-            } catch (error) {
-                console.error("Error fetching availability:", error);
-            }
-        };
-        fetchAvailability();
-    }, [id]);
-
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
-
     if (loading) return <div>Loading...</div>;
     if (!house) return <div>House not found.</div>;
-
-    // Funzione per disabilitare le date non disponibili
-    const tileDisabled = ({ date }) => {
-        const normalizedDate = new Date(date);
-        normalizedDate.setHours(0, 0, 0, 0); // Normalizziamo la data
-
-        return !availability.some(availableDate => 
-            availableDate.getTime() === normalizedDate.getTime()
-        );
-    };
 
     const advancedServices = [
         { name: "Kitchen", icon: <FaUtensils className="icon-services" />, available: house.kitchen },
@@ -89,24 +54,6 @@ const HouseDescription = () => {
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                </Col>
-
-                <Col md={4} className="calendar-container">
-                    <div className="calendar-title">Availability</div>
-
-                    {/* Stampa le date disponibili nella console */}
-                    <div className="availability-dates">
-                        <strong>Available Dates (check console for debugging):</strong>
-                        {availability.map((date, idx) => (
-                            <p key={idx}>{date.toLocaleDateString()}</p>
-                        ))}
-                    </div>
-
-                    <Calendar
-                        onChange={handleDateChange}
-                        value={selectedDate}
-                        tileDisabled={tileDisabled}
-                    />
                 </Col>
             </Row>
 
