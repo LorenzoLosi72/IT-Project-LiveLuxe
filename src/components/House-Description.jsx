@@ -50,13 +50,12 @@ const HouseDescription = () => {
     };
 
     const handleActiveDateChange = ({ activeStartDate }) => {
-        setActiveDate(activeStartDate);  // Aggiorniamo la data attiva (mese corrente)
+        setActiveDate(activeStartDate); 
     };
 
     if (loading) return <div>Loading...</div>;
     if (!house) return <div>House not found.</div>;
 
-    // Verifica se la data è disabilitata
     const tileDisabled = ({ date }) => {
         const normalizedDate = new Date(date);
         normalizedDate.setHours(0, 0, 0, 0);
@@ -65,7 +64,6 @@ const HouseDescription = () => {
         );
     };
 
-    // Funzione per disabilitare i giorni che non appartengono al mese corrente
     const tileClassName = ({ date, view }) => {
         if (view === 'month') {
             const currentMonth = activeDate.getMonth();
@@ -109,9 +107,9 @@ const HouseDescription = () => {
                         onChange={handleDateChange}
                         value={selectedDate}
                         tileDisabled={tileDisabled}
-                        tileClassName={tileClassName}  // Aggiungi la classe per i giorni non appartenenti al mese
+                        tileClassName={tileClassName}  
                         view="month"
-                        onActiveDateChange={handleActiveDateChange}  // Cambia mese
+                        onActiveDateChange={handleActiveDateChange}  
                         showNeighboringMonth={false} 
                     />
                 </Col>
