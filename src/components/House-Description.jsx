@@ -11,8 +11,12 @@ const HouseDescription = () => {
     const { id } = useParams();
     const [house, setHouse] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [activeDate, setActiveDate] = useState(new Date());
+    const [arrivalDate, setArrivalDate] = useState(null);
+    const [departureDate, setDepartureDate] = useState(null);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const today = new Date();
 
     useEffect(() => {
         const fetchHouseDetails = async () => {
@@ -28,20 +32,9 @@ const HouseDescription = () => {
         fetchHouseDetails();
     }, [id]);
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
-
-    const handleActiveDateChange = ({ activeStartDate }) => {
-        setActiveDate(activeStartDate); 
-    };
-
     const isAvailable = (date) => {
+        if (!house || !house.availabilities) return null;
         const dateToCheck = new Date(date).setHours(0, 0, 0, 0);
-        if (!house.availabilities || house.availabilities.length === 0) {
-            return true;
-        }
-
         for (const availability of house.availabilities) {
             const startDate = new Date(availability.startDate).setHours(0, 0, 0, 0);
             const endDate = new Date(availability.endDate).setHours(0, 0, 0, 0);
@@ -52,29 +45,63 @@ const HouseDescription = () => {
         return null;
     };
 
-    const tileClassName = ({ date, view }) => {
-        if (view === 'month') {
-            const price = isAvailable(date);
-            if (price === null) {
-                return 'react-calendar__tile--disabled';
+    const handleDateChange = (date) => {
+        setErrorMessage("");
+        if (!arrivalDate || (arrivalDate && departureDate)) {
+            setArrivalDate(date);
+            setDepartureDate(null);
+            setTotalPrice(0);
+        } else {
+            if (date > arrivalDate) {
+                if (!isRangeAvailable(arrivalDate, date)) {
+                    setErrorMessage("There are unavailable dates in this range.");
+                    return;
+                }
+                setDepartureDate(date);
+                calculateTotalPrice(arrivalDate, date);
+            } else {
+                setArrivalDate(date);
+                setDepartureDate(null);
+                setTotalPrice(0);
             }
-            return null;
         }
-        return null;
     };
 
-    const tileContent = ({ date, view }) => {
-        if (view === 'month') {
-            const price = isAvailable(date);
-            if (price !== null) {
-                return (
-                    <div className="calendar-price">
-                        <span>${price}</span>
-                    </div>
-                );
+    const isRangeAvailable = (start, end) => {
+        let currentDate = new Date(start);
+        while (currentDate < end) {
+            if (isAvailable(currentDate) === null) {
+                window.location.reload();
+                return false; // There is an unavailable date in this range
             }
+            currentDate.setDate(currentDate.getDate() + 1);
         }
-        return null;
+        return true; // All dates in this range are available
+    };
+
+    const calculateTotalPrice = (start, end) => {
+        let total = 0;
+        let currentDate = new Date(start);
+        while (currentDate < end) {
+            const price = isAvailable(currentDate);
+            if (price !== null) {
+                total += price;
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        setTotalPrice(total);
+    };
+
+    const tileClassName = ({ date }) => {
+        if (date >= arrivalDate && date <= departureDate) {
+            return "react-calendar__tile--selected";
+        }
+        return isAvailable(date) === null ? "react-calendar__tile--disabled" : null;
+    };
+
+    const getPriceForDay = (date) => {
+        const price = isAvailable(date);
+        return price ? `$${price}` : '';
     };
 
     if (loading) return <div>Loading...</div>;
@@ -91,11 +118,8 @@ const HouseDescription = () => {
     return (
         <div className="container-house-description">
             <Row className="justify-content-center gx-4 mx-2">
-                <Col md={10}>
-                    <h1 className="house-title">{house.name}</h1>
-                </Col>
+                <Col md={10}><h1 className="house-title">{house.name}</h1></Col>
             </Row>
-
             <Row className="justify-content-center gx-4 mx-2">
                 <Col md={6}>
                     <Carousel interval={null} className="house-carousel">
@@ -109,24 +133,28 @@ const HouseDescription = () => {
                 <Col md={4} className="calendar-container">
                     <div className="calendar-title">Availability</div>
                     <Calendar
-                        onChange={handleDateChange}
-                        value={selectedDate}
+                        onClickDay={handleDateChange}
                         tileClassName={tileClassName}
-                        tileContent={tileContent}
-                        view="month"
-                        onActiveDateChange={handleActiveDateChange}
-                        showNeighboringMonth={false}
+                        showNeighboringMonth={false}  // This hides the neighboring months' days
+                        minDate={today}  // Set the calendar's minimum date to today's date
+                        tileContent={({ date }) => {
+                            const price = getPriceForDay(date);
+                            return price ? (
+                                <div className="calendar-price">{price}</div>
+                            ) : null;
+                        }}
                     />
+                    {errorMessage && <div className="error-message">{errorMessage}</div>}
+                    <div className="total-price">Total Price: ${totalPrice}</div>
+                    <button className="book-button">Book</button>
                 </Col>
             </Row>
-
             <Row className="justify-content-center gx-4 mx-2">
                 <Col md={10} className="house-location">
                     <FaMapMarkerAlt className="house-icon-location" /> {house.address}
                     <span className="detail-separator mx-2">•</span>{house.city}, {house.state}.
                 </Col>
             </Row>
-
             <Row className="justify-content-center gx-4 mx-2">
                 <Col md={10} className="house-guests-details">
                     <FaUserFriends className="house-icon-guests" /> Guests: {house.guestsNumber}
@@ -134,7 +162,6 @@ const HouseDescription = () => {
                     <FaBed className="house-icon-guests" /> Bedrooms: {house.bedrooms}
                 </Col>
             </Row>
-
             <Row className="justify-content-center gx-4 mx-2">
                 <Col md={10} className="house-services-details">
                     {advancedServices.filter(service => service.available).map((service, idx, filteredServices) => (

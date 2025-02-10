@@ -24,7 +24,6 @@
     width: 500px;
     object-fit: cover;
     border-radius: 26px;
-    overflow: hidden;
 }
 
 .container-house-description .house-location {
@@ -87,7 +86,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 100%;
 }
 
 .react-calendar {
@@ -107,10 +105,6 @@
 
 .react-calendar__tile:disabled {
     background-color: #171717;
-}
-
-.react-calendar__month-view__weekdays {
-    display: none;
 }
 
 .react-calendar__navigation {
@@ -133,21 +127,60 @@
     font-weight: 600;
     font-size: 20px;
 }
-/* For the unavailable day*/
+
+/* For the unavailable day */
 .react-calendar__tile--disabled {
-    background-color: red; 
+    background-color: gray; 
     color: #171717;  
     pointer-events: none; 
 }
 
-.react-calendar__tile--available {
-    background-color: white!important;
-    color: white !important;
+.total-price {
+    color: white;  
+    font-size: 20px;
+    margin-top: 20px;
 }
 
-.react-calendar__tile--available .calendar-price {
-    display: block;
-    font-size: 12px;
-    color: green !important; 
-    margin-top: 5px;
+.price-per-night {
+    color: white; 
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.book-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    margin-top: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.book-button:hover {
+    background-color: #0056b3;
+}
+
+/* Classi per la selezione delle date */
+.react-calendar__tile--check-in {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+}
+
+.react-calendar__tile--check-out {
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+}
+
+.react-calendar__tile--selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
 }
