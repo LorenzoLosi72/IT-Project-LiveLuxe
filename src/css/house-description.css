@@ -67,3 +67,67 @@
     margin-bottom: 5px;
     margin-right: 10px;
 }
+
+.container-house-description .calendar-title {
+    color: #D6AD60;
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.calendar-container {
+    background-color: #171717;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.react-calendar {
+    background-color: #171717;
+    color: #ffffff;
+    border: 1px solid #171717;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.react-calendar__tile {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #171717;
+}
+
+.react-calendar__tile:disabled {
+    background-color: #171717;
+}
+
+.react-calendar__month-view__weekdays {
+    display: none;
+}
+
+.react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #171717;
+    border: none;
+}
+
+.react-calendar__navigation button {
+    color: #ffffff;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+}
+
+.react-calendar__navigation__label {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 20px;
+}
