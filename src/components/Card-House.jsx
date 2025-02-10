@@ -54,7 +54,7 @@ const CardHouse = ({ searchResults}) => {
                                         <Card.Text> 
                                             <FaMapMarkerAlt className="icon-location"/>{house.city}, {house.state}  <br/> 
                                             <strong className="label-house-cards">Host:</strong> {house.hostName} <br/>
-                                            <strong className="label-house-cards">Avaible:</strong> {formatDate(house.startDate)} to {formatDate(house.endDate)} <br/>
+                                            <strong className="label-house-cards">Available:</strong> {formatDate(house.startDate)} to {formatDate(house.endDate)} <br/>
                                             <FaCoins className="icon-price" /> {house.pricePerNight} $ / night 
                                         </Card.Text>
                                         <hr className="card-divider" />
