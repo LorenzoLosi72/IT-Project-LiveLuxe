@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react"; 
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Carousel, Row, Col } from "react-bootstrap";
 import { FaMapMarkerAlt, FaUserFriends, FaBed, FaUtensils, FaWifi, FaSwimmer, FaCar, FaSnowflake } from "react-icons/fa";
 import "../css/house-description.css";
-
+import { AuthContext } from "../Auth-Context";
 const HouseDescription = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const { isLoggedIn } = useContext(AuthContext);
     const [house, setHouse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [arrivalDate, setArrivalDate] = useState(null);
@@ -72,11 +74,11 @@ const HouseDescription = () => {
         while (currentDate < end) {
             if (isAvailable(currentDate) === null) {
                 window.location.reload();
-                return false; // There is an unavailable date in this range
+                return false; 
             }
             currentDate.setDate(currentDate.getDate() + 1);
         }
-        return true; // All dates in this range are available
+        return true; 
     };
 
     const calculateTotalPrice = (start, end) => {
@@ -103,6 +105,29 @@ const HouseDescription = () => {
         const price = isAvailable(date);
         return price ? `$${price}` : '';
     };
+// function to handle the booking botton
+const handleBooking = () => {
+    if (!isLoggedIn) {
+        setErrorMessage("To book a house you have to be logged in"); 
+        return;
+    }
+
+    if (!arrivalDate || !departureDate) {
+        setErrorMessage("Please select both check-in and check-out dates.");
+        return;
+    }
+
+    navigate("/booking-page", {
+        state: {
+            houseId: id,
+            houseName: house.name,
+            checkIn: arrivalDate,
+            checkOut: departureDate,
+            totalPrice: totalPrice
+        }
+    });
+};
+
 
     if (loading) return <div>Loading...</div>;
     if (!house) return <div>House not found.</div>;
@@ -135,8 +160,8 @@ const HouseDescription = () => {
                     <Calendar
                         onClickDay={handleDateChange}
                         tileClassName={tileClassName}
-                        showNeighboringMonth={false}  // This hides the neighboring months' days
-                        minDate={today}  // Set the calendar's minimum date to today's date
+                        showNeighboringMonth={false}
+                        minDate={today}
                         tileContent={({ date }) => {
                             const price = getPriceForDay(date);
                             return price ? (
@@ -146,7 +171,7 @@ const HouseDescription = () => {
                     />
                     {errorMessage && <div className="error-message">{errorMessage}</div>}
                     <div className="total-price">Total Price: ${totalPrice}</div>
-                    <button className="book-button">Book</button>
+                    <button className="book-button" onClick={handleBooking}>Book</button>
                 </Col>
             </Row>
             <Row className="justify-content-center gx-4 mx-2">

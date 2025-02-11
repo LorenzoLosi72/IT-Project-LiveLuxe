@@ -9,6 +9,7 @@ import Login from './components/Login.jsx';
 import Delimiter from './components/Delimiter.jsx';
 import Registration from './components/Registration.jsx';
 import HouseDescription from './components/House-Description.jsx';
+import BookingPage from './components/Booking-Page.jsx';
 
 import RentHome from './components/Rent-Home.jsx';
 import UserAccount from './components/User-Account.jsx';
@@ -30,7 +31,7 @@ function ProtectedRoute({ children }) {
 // Layout component to manage headers based on type of user
 function Layout({ children }) {
     const location = useLocation();
-    const { userRole } = useContext(AuthContext); // Get  user role from AuthContext
+    const { userRole } = useContext(AuthContext); // Get user role from AuthContext
 
     const showSearchBar = location.pathname === '/' && userRole !== 'host'; // Hide search bar for hosts
     const showHeader = location.pathname !== '/rent-home'; // Hide header in rent-home
@@ -63,6 +64,7 @@ function App() {
                         <Route path="/house/:id" element={ <HouseDescription /> } />
                         <Route path="/login" element={<Login />} />
                         <Route path="/registration" element={<Registration />} />
+                        <Route path="/booking-page" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
                         <Route
                             path="/rent-home"
                             element={
