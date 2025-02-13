@@ -33,6 +33,36 @@ const properties = [{
         CategoryID: 1
     },
     {
+        Name: 'Suite odino',
+        GuestsNumber: 2,
+        Bedrooms: 1,
+        Kitchen: 0,
+        Parking: 1,
+        Pool: 1,
+        WIFI: 1,
+        AirConditioning: 1,
+        Notes: 'Suite lussuosa.',
+        Address: 'Via dei Fiori 20, Milano',
+        UserID: 3,
+        LocationID: 1,
+        CategoryID: 1
+    },
+    {
+        Name: 'Appartamento green',
+        GuestsNumber: 2,
+        Bedrooms: 1,
+        Kitchen: 0,
+        Parking: 1,
+        Pool: 1,
+        WIFI: 1,
+        AirConditioning: 1,
+        Notes: 'Nice apartment',
+        Address: 'Via dei Pini 20, Miano',
+        UserID: 3,
+        LocationID: 1,
+        CategoryID: 1
+    },
+    {
         Name: 'Monolocale Moderno',
         GuestsNumber: 2,
         Bedrooms: 1,

@@ -3,8 +3,7 @@ let { resetAutoIncrement } = require('./reset-autoincrement.js');
 
 // List of availability records
 const availabilities = [
-    { StartDate: '2024-12-01', EndDate: '2030-12-15', PricePerNight: 100.0, PropertyID: 1 },
-    { StartDate: '2025-01-01', EndDate: '2027-01-15', PricePerNight: 150.0, PropertyID: 2 },
+    { StartDate: '2025-12-01', EndDate: '2030-12-15', PricePerNight: 100.0, PropertyID: 1 },
     { StartDate: '2025-03-01', EndDate: '2029-03-15', PricePerNight: 200.0, PropertyID: 3 },
     { StartDate: '2025-04-01', EndDate: '2029-04-15', PricePerNight: 180.0, PropertyID: 4 },
     { StartDate: '2025-02-10', EndDate: '2025-02-20', PricePerNight: 120.0, PropertyID: 1 },
@@ -22,7 +21,11 @@ const availabilities = [
     { StartDate: '2025-08-15', EndDate: '2025-08-25', PricePerNight: 270.0, PropertyID: 1 },
     { StartDate: '2025-09-01', EndDate: '2025-09-10', PricePerNight: 280.0, PropertyID: 2 },
     { StartDate: '2025-09-15', EndDate: '2025-09-25', PricePerNight: 290.0, PropertyID: 3 },
-    { StartDate: '2025-10-01', EndDate: '2025-10-10', PricePerNight: 300.0, PropertyID: 4 }
+    { StartDate: '2025-03-01', EndDate: '2025-10-10', PricePerNight: 300.0, PropertyID: 5 },
+    { StartDate: '2025-03-01', EndDate: '2025-10-10', PricePerNight: 300.0, PropertyID: 6 },
+
+
+
 ];
 
 // Function for populate availabilities table

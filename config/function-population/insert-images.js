@@ -17,7 +17,18 @@ const images = [
     { Image: '../../images/properties/property_3_pic_3.png', Description: 'TV e area relax', PropertyID: 3 },
     { Image: '../../images/properties/property_4_pic_1.png', Description: 'Cucina rustica', PropertyID: 4 },
     { Image: '../../images/properties/property_4_pic_2.png', Description: 'Soggiorno accogliente', PropertyID: 4 },
-    { Image: '../../images/properties/property_4_pic_3.png', Description: 'Bagno moderno', PropertyID: 4 }
+    { Image: '../../images/properties/property_4_pic_3.png', Description: 'Bagno moderno', PropertyID: 4 },
+    { Image: '../../images/properties/property_5_pic_1.jpg', Description: 'Bel letto', PropertyID: 5 },
+    { Image: '../../images/properties/property_5_pic_2.jpg', Description: 'Bella camera', PropertyID: 5 },
+    { Image: '../../images/properties/property_5_pic_3.jpg', Description: 'Bel bagno', PropertyID: 5 },
+    { Image: '../../images/properties/property_5_pic_4.jpg', Description: 'Bel soggiorno', PropertyID: 5 },
+    { Image: '../../images/properties/property_5_pic_5.jpg', Description: 'Bel soggiorno', PropertyID: 5 },
+    { Image: '../../images/properties/property_6_pic_1.jpg', Description: 'Bel soggiorno', PropertyID: 6 },
+    { Image: '../../images/properties/property_6_pic_2.jpg', Description: 'Bella camera', PropertyID: 6 },
+    { Image: '../../images/properties/property_6_pic_3.jpg', Description: 'Bella vista', PropertyID: 6 },
+
+
+
 ];
 
 // Function for populate images table
