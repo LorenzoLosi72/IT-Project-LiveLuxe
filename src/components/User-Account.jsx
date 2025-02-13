@@ -28,6 +28,7 @@ function UserAccount() {
         try {
             const response = await axios.post('http://localhost:3001/api/user-data', { username });
             setUserData(response.data);
+
         } catch (err) {
             console.error("Error fetching user data:", err.response?.data || err.message);
             setError('Failed to fetch user data.');
@@ -40,14 +41,15 @@ function UserAccount() {
             {error && <p className="text-danger">{error}</p>}
             {userData ? (
                 <div className="user-data">
-                    <p><strong>Username:</strong> {userData.username}</p>
-                    <p><strong>Email:</strong> {userData.mail}</p>
-                    <p><strong>First Name:</strong> {userData.firstName}</p>
-                    <p><strong>Last Name:</strong> {userData.lastName}</p>
-                    <p><strong>Date of Birth:</strong> {formatDate(userData.dob)}</p>
-                    <p><strong>Address:</strong> {userData.address}</p>
-                    <p><strong>Telephone Number:</strong> {userData.telephoneNumber}</p>
-                    <p><strong>Host:</strong> {userData.isHost ? 'Yes' : 'No'}</p>
+                    <p><strong>Username:</strong> {userData.Username}</p>
+                    <p><strong>Email:</strong> {userData.Mail}</p>
+                    <p><strong>First Name:</strong> {userData.FirstName}</p>
+                    <p><strong>Last Name:</strong> {userData.LastName}</p>
+                    <p><strong>Date of Birth:</strong> {formatDate(userData.DoB)}</p>
+                    <p><strong>Address:</strong> {userData.Address}</p>
+                    <p><strong>Telephone Number:</strong> {userData.TelephoneNumber}</p>
+                    <p><strong>Host:</strong> {userData.IsHost ? 'Yes' : 'No'}</p>
+
                 </div>
             ) : (
                 <p>Loading your account data...</p>

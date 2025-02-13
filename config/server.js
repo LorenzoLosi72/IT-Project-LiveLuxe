@@ -24,6 +24,33 @@ app.post('/api/login', (req, res) => {
         else { res.status(200).json({ username: user[0].Username, isHost: user[0].IsHost }); }
     });
 });
+ 
+app.post('/api/user-data', (req, res) => {
+    const { username } = req.body;
+
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'Username is required' });
+    }
+
+    const connection = createConnection();
+    const query = `SELECT UserID, FirstName, LastName, DoB, TelephoneNumber, Address, Mail, Username, IsHost FROM users WHERE Username = ?`;
+
+    connection.query(query, [username], (err, result) => {
+        if (err) {
+            console.error('Error fetching user data:', err);
+            connection.end();
+            return res.status(500).json({ success: false, message: 'Database error' });
+        }
+
+        if (result.length === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.json(result[0]);
+        connection.end();
+    });
+});
 
 // Registration API
 app.post('/api/register', (req, res) => {
