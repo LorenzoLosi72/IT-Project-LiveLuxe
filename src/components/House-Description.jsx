@@ -108,7 +108,7 @@ const HouseDescription = () => {
 // function to handle the booking botton
 const handleBooking = () => {
     if (!isLoggedIn) {
-        setErrorMessage("To book a house you have to be logged in"); 
+        setErrorMessage("To book a house you have to be logged in"); // Mostra messaggio di errore
         return;
     }
 

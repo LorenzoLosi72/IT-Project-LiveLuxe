@@ -104,41 +104,160 @@ app.get('/api/houses', (req, res) => {
 
         connection.end();
     });
-});
+});app.post("/api/booking", (req, res) => {
+    const { startDate, endDate, houseId, totalPrice, username } = req.body;
 
+    if (!startDate || !endDate || !houseId || !username) {
+        return res.status(400).json({
+            success: false,
+            message: 'Missing startDate, endDate, houseId, or username'
+        });
+    }
 
-// Get User Data API
-app.post('/api/user-data', (req, res) => {
-    const { username } = req.body;
-
+    console.log(`Dati ricevuti: Start Date = ${startDate}, End Date = ${endDate}, House ID = ${houseId}, Username = ${username} \n`);
     const connection = createConnection();
-    const query = `
-        SELECT 
-            UserId AS userid,
-            Username AS username, 
-            Mail AS mail, 
-            FirstName AS firstName, 
-            LastName AS lastName, 
-            DoB AS dob, 
-            Address AS address, 
-            TelephoneNumber AS telephoneNumber, 
-            IsHost AS isHost 
-        FROM users 
-        WHERE Username = ?`;
 
-    connection.query(query, [username], (err, results) => {
+    // Trova lo userId basato sullo username
+    const getUserQuery = "SELECT UserID FROM users WHERE Username = ?";
+    
+    connection.query(getUserQuery, [username], (err, results) => {
         if (err) {
-            console.error("Error fetching user data:", err.message);
-            res.status(500).send("Error retrieving user data.");
-        } else if (results.length === 0) {
-            res.status(404).send("User not found.");
-        } else {
-            res.status(200).json(results[0]);
+            console.error("Errore nel recupero dello UserID:", err);
+            connection.end();
+            return res.status(500).json({ success: false, message: 'Errore nel recupero dello UserID' });
         }
 
-        connection.end();
+        if (results.length === 0) {
+            console.log("Nessun utente trovato con questo username.");
+            connection.end();
+            return res.status(404).json({ success: false, message: 'Utente non trovato' });
+        }
+
+        const userId = results[0].UserID;
+        console.log(`UserID trovato: ${userId}`);
+
+        // Ora che abbiamo lo userId, continuiamo con la prenotazione
+        const mStartDate = new Date(startDate);
+        mStartDate.setDate(mStartDate.getDate() + 1);
+        const bookingStartDate = mStartDate.toISOString().split('T')[0];
+
+        const mEndDate = new Date(endDate);
+        const bookingEndDate = mEndDate.toISOString().split('T')[0];
+
+        const nextDay = new Date(bookingEndDate);
+        nextDay.setDate(nextDay.getDate() + 1);
+        const nextDayFormatted = nextDay.toISOString().split('T')[0];
+
+        console.log(`Date convertite: Start Date = ${bookingStartDate}, End Date = ${bookingEndDate}`);
+
+        const checkAvailabilityQuery = `
+            SELECT * FROM availabilities
+            WHERE PropertyID = ? AND StartDate <= ? AND EndDate >= ?`;
+
+        connection.query(checkAvailabilityQuery, [houseId, bookingStartDate, bookingEndDate], (err, rows) => {
+            if (err) {
+                console.error("Errore durante il controllo della disponibilità:", err);
+                connection.end();
+                return res.status(500).json({ success: false, message: 'Errore nel controllo della disponibilità' });
+            }
+
+            if (rows.length === 0) {
+                console.log("Nessuna disponibilità trovata per le date selezionate.");
+                connection.end();
+                return res.status(404).json({ success: false, message: 'Nessuna disponibilità trovata' });
+            }
+
+            const availability = rows[0];
+            let startDate = new Date(availability.StartDate);
+            let endDate = new Date(availability.EndDate);
+            startDate.setDate(startDate.getDate() + 1);
+            endDate.setDate(endDate.getDate() + 1);
+
+            const StartDate = startDate.toISOString().split('T')[0];
+            const EndDate = endDate.toISOString().split('T')[0];
+
+            console.log(`Disponibilità trovata: Start Date = ${StartDate}, End Date = ${EndDate}`);
+
+            const deleteQuery = "DELETE FROM availabilities WHERE PropertyID = ? AND StartDate = ? AND EndDate = ?";
+            connection.query(deleteQuery, [houseId, availability.StartDate, availability.EndDate], (err) => {
+                if (err) {
+                    console.error("Errore durante l'eliminazione della disponibilità:", err);
+                    connection.end();
+                    return res.status(500).json({ success: false, message: 'Errore durante l\'eliminazione della disponibilità' });
+                }
+
+                console.log(`Disponibilità eliminata: Start Date = ${StartDate}, End Date = ${EndDate}`);
+
+                const bookingStatus = 'Confirmed';
+
+                const insertBookingQuery = `
+                    INSERT INTO bookings (StartDate, EndDate, TotalPrice, BookingStatus, PropertyID, UserID) 
+                    VALUES (?, ?, ?, ?, ?, ?)`;
+
+                connection.query(insertBookingQuery, [bookingStartDate, nextDayFormatted, totalPrice, bookingStatus, houseId, userId], (err) => {
+                    if (err) {
+                        console.error("Errore durante l'inserimento della prenotazione:", err);
+                        connection.end();
+                        return res.status(500).json({ success: false, message: 'Errore durante l\'inserimento della prenotazione' });
+                    }
+
+                    console.log(`Prenotazione inserita: Start Date = ${bookingStartDate}, End Date = ${bookingEndDate}`);
+
+                    const pricePerNight = availability.PricePerNight;
+                    let queries = [];
+
+                    if (bookingStartDate > StartDate) {
+                        let parsedBookingStartDate = new Date(mStartDate);
+                        parsedBookingStartDate.setDate(parsedBookingStartDate.getDate());
+                        let formattedBookingStartDate = parsedBookingStartDate.toISOString().split('T')[0];
+
+                        queries.push({
+                            query: "INSERT INTO availabilities (StartDate, EndDate, PropertyID, PricePerNight) VALUES (?, ?, ?, ?)",
+                            params: [StartDate, formattedBookingStartDate, houseId, pricePerNight]
+                        });
+                        console.log(`Nuova disponibilità prima: Start Date = ${StartDate}, End Date = ${formattedBookingStartDate}`);
+                    }
+
+                    if (bookingEndDate < EndDate) {
+                        let parsedBookingEndDate = new Date(mEndDate);
+                        parsedBookingEndDate.setDate(parsedBookingEndDate.getDate() + 1);
+                        let formattedBookingEndDate = parsedBookingEndDate.toISOString().split('T')[0];
+
+                        if (formattedBookingEndDate !== EndDate) {
+                            queries.push({
+                                query: "INSERT INTO availabilities (StartDate, EndDate, PropertyID, PricePerNight) VALUES (?, ?, ?, ?)",
+                                params: [formattedBookingEndDate, EndDate, houseId, pricePerNight]
+                            });
+                            console.log(`Nuova disponibilità dopo: Start Date = ${formattedBookingEndDate}, End Date = ${EndDate}`);
+                        }
+                    }
+
+                    function executeNextQuery() {
+                        if (queries.length === 0) {
+                            console.log("Prenotazione confermata e disponibilità aggiornata.");
+                            connection.end();
+                            return res.status(200).json({ success: true, message: 'Prenotazione confermata e disponibilità aggiornata' });
+                        }
+                        const { query, params } = queries.shift();
+                        connection.query(query, params, (err) => {
+                            if (err) {
+                                console.error("Errore durante l'aggiornamento della disponibilità:", err);
+                                connection.end();
+                                return res.status(500).json({ success: false, message: 'Errore durante l\'aggiornamento della disponibilità' });
+                            }
+
+                            console.log(`Disponibilità inserita: Start Date = ${params[0]}, End Date = ${params[1]}`);
+                            executeNextQuery();
+                        });
+                    }
+
+                    executeNextQuery();
+                });
+            });
+        });
     });
 });
+
 
 // Search and Advanced search API
 app.post('/api/search', (req, res) => {
