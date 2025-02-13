@@ -13,19 +13,21 @@ const CardHouse = ({ searchResults}) => {
 
     // Fetch houses data
     useEffect(() => {
-        const fetchHouses = async () => {
-            try { 
-                if(Array.isArray(searchResults)) { console.log("Search results updated:", searchResults); setHouses(searchResults); }
-                else 
-                {
-                    const response = await axios.get('http://localhost:3001/api/houses'); 
-                    setHouses(response.data);
-                }
-            } catch (error) { console.error("Error retrieving house data:", error); } };
+    const fetchHouses = async () => {
+        try { 
+            if (Array.isArray(searchResults)) { 
+                console.log("Search results updated:", searchResults); 
+                setHouses([...new Set(searchResults)]); // Rimuove duplicati
+            } else {
+                const response = await axios.get('http://localhost:3001/api/houses'); 
+                console.log("Fetched houses:", response.data);
+                setHouses(response.data);
+            }
+        } catch (error) { console.error("Error retrieving house data:", error); }
+    };
 
-        fetchHouses();
-
-    }, [searchResults]);
+    fetchHouses();
+}, [searchResults]);
 
     // Function that convert house availability dates to day-month-year format.
     const formatDate = (dateString) => {
@@ -45,10 +47,17 @@ const CardHouse = ({ searchResults}) => {
                 ) : ( houses.map((house, index) => (
                             <Col md={4} className="mb-4" key={index}>
                                 <Card className="house-card">
-                                    <Carousel interval={null} className="house-carousel"> 
-                                    {house.images.map((image, idx) => (
-                                        <Carousel.Item key={idx}><img src={image} alt={`House ${index + 1} - Image ${idx + 1}`} className="d-block w-100 carousel-image" /></Carousel.Item>))}
-                                    </Carousel>
+                                <Carousel interval={null} className="house-carousel"> 
+                                    {[...new Set(house.images)].map((image, idx) => (
+                                        <Carousel.Item key={idx}>
+                                            <img 
+                                                src={image} 
+                                                alt={`House ${house.id} - Image ${idx + 1}`} 
+                                                className="d-block w-100 carousel-image" 
+                                            />
+                                        </Carousel.Item>
+                                    ))}
+                                </Carousel>
                                     <Card.Body>
                                         <Card.Title>{house.name} </Card.Title>
                                         <Card.Text> 
