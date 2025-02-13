@@ -18,12 +18,12 @@ const BookingPage = () => {
         return <div>Error: Missing booking details.</div>;
     }
 
-    // Usa moment per formattare la data nel formato MM-DD-YYYY
+    // Converting data format
     const formatDateToUS = (date) => {
         return moment(date).format('YYYY-MM-DD');
     };
 
-    // Funzione per confermare la prenotazione usando axios
+    // Function that calls api to book the house
     const handleConfirmBooking = async () => {
         try {
             const response = await axios.post('http://localhost:3001/api/booking', {
@@ -56,7 +56,7 @@ const BookingPage = () => {
                 <p><strong>Total Price:</strong> ${totalPrice}</p>
             </div>
             
-            {/* Mostra un messaggio di caricamento durante la richiesta */}
+            {}
             {loading ? (
                 <p>Loading...</p>
             ) : (
