@@ -131,7 +131,9 @@ app.get('/api/houses', (req, res) => {
 
         connection.end();
     });
-});app.post("/api/booking", (req, res) => {
+});
+
+app.post("/api/booking", (req, res) => {
     const { startDate, endDate, houseId, totalPrice, username } = req.body;
 
     if (!startDate || !endDate || !houseId || !username) {
