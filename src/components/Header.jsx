@@ -42,7 +42,7 @@ function Header() {
                         {isLoggedIn && userRole === 'host' && (
                             <>
                                 <Nav.Link onClick={() => handleNavigate('/rent-home')} > Rent your home </Nav.Link>
-                                <Nav.Link onClick={() => handleNavigate('/host-bookings')} > Bookings </Nav.Link>
+                                <Nav.Link onClick={() => handleNavigate('/host-booking')} > Bookings </Nav.Link>
                             </>
                         )}
                         {isLoggedIn && userRole === 'client' && (

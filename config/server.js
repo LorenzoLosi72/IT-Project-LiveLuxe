@@ -24,7 +24,41 @@ app.post('/api/login', (req, res) => {
         else { res.status(200).json({ username: user[0].Username, isHost: user[0].IsHost }); }
     });
 });
- 
+
+app.get('/api/host-bookings/:userID', (req, res) => {
+    const { userID } = req.params;
+
+    if (!userID) {
+        return res.status(400).json({ success: false, message: 'UserID is required' });
+    }
+
+    const connection = createConnection();
+    const query = `
+        SELECT b.BookingID, b.StartDate, b.EndDate, b.TotalPrice, b.BookingStatus,
+               p.Name AS PropertyName, u.username AS GuestName
+        FROM bookings b
+        JOIN properties p ON b.PropertyID = p.PropertyID
+        JOIN users u ON b.UserID = u.UserID
+        WHERE p.UserID = ?;
+    `;
+
+    connection.query(query, [userID], (err, results) => {
+        if (err) {
+            console.error('Error fetching host bookings:', err);
+            connection.end();
+            return res.status(500).json({ success: false, message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: 'No bookings found for your properties' });
+        }
+
+        res.status(200).json(results);
+        connection.end();
+    });
+});
+
 app.post('/api/user-data', (req, res) => {
     const { username } = req.body;
 
