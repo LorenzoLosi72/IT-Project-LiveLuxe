@@ -128,8 +128,12 @@ const handleBooking = () => {
 
     navigate("/booking-page", {
         state: {
-            houseId: id,
+            houseId: house.id,
             houseName: house.name,
+            houseAddress: house.address,
+            houseCity: house.city,
+            houseState: house.state,
+            houseImage: house.images[0],
             checkIn: arrivalDate,
             checkOut: departureDate,
             totalPrice: totalPrice

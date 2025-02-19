@@ -3,103 +3,124 @@
     margin: 40px auto;
     padding: 20px;
     background-color: #171717;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 30px;
     border: 2px solid #D6AD60;
 }
 
-.booking-title {
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
-    color: #fff;
-    margin-bottom: 20px;
+.booking-container:hover {
+    transform: translateY(-3px);
 }
 
-.booking-details {
-    background: #171717;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.booking-details p {
-    font-size: 16px;
-    color: #fff;
-    margin: 8px 0;
-}
-
-.booking-details span {
-    font-weight: bold;
-    color: #222;
-}
-
-.booking-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.booking-form label {
-    font-weight: bold;
-    color: #171717;
-}
-
-.booking-form input,
-.booking-form select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #171717;
-    border-radius: 6px;
-    width: 100%;
-}
-
-.booking-button {
-    background-color: #D6AD60;
-    color: white;
+.booking-details-container {
+    color: #f7f7f7ef; 
+    font-weight: 500; 
     font-size: 18px;
-    font-weight: bold;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
+    margin-bottom: 15px;
+    line-height: 2;
 }
 
-.booking-button:hover {
-    background-color: #D6AD60;
-}
-
-.error-message {
-    color: red;
-    font-size: 14px;
+.form-title {
+    font-size: 25px;
+    font-weight: 700;
+    color: #f7f7f7ef;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 20px; 
 }
 
-.success-message {
-    color: green;
-    font-size: 16px;
-    text-align: center;
-    font-weight: bold;
-    margin-top: 20px;
+.booking-details-container .booking-details-label {
+    color:#D6AD60;
+    font-weight: 600;
 }
 
-@media (max-width: 600px) {
-    .booking-container {
-        padding: 15px;
-    }
+.booking-details-container .booking-details-image {
+    height: 210px;
+    width: 315px;
+    object-fit: cover;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-left: 50px;
+}
 
-    .booking-title {
-        font-size: 24px;
-    }
+.booking-container .card-divider {
+    margin-top: 30px;
+    margin-bottom: 40px;
+    border: 1px solid #D6AD60;
+    opacity: 1 !important;
+    border-radius: 30px;
+}
 
-    .booking-form input,
-    .booking-form select {
-        font-size: 14px;
-    }
+.booking-container .btn-primary {
+    background-color: #171717; 
+    color: #f7f7f7ef;
+    border-radius: 30px; 
+    padding: 14px 20px;
+    border: 2px solid #D6AD60; 
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    justify-content: right;
+}
 
-    .booking-button {
-        font-size: 16px;
-    }
+.booking-container .btn-primary:hover {
+    background-color: #D6AD60; 
+    color: #171717;
+    border-color: #D6AD60;
+}
+
+.booking-container .btn-primary:active {
+    background-color: #D6AD60 !important;
+    color: #171717 !important;
+    border-color: #D6AD60 !important;  
+    transform: scale(0.95);
+    outline: none;
+}
+
+.payment-container {
+    padding: 20px;
+}
+
+.payment-container .form-label {
+    font-size: 15px; 
+    font-weight: 500;
+    color: #f7f7f7ef;
+    margin-bottom: 5px;
+    margin-left: 15px;
+}
+
+.payment-container .form-control {
+    border-radius: 30px; 
+    width: 600px;
+    background-color: #f7f7f7ef;
+    padding: 12px 20px;
+    border: 2px solid #D6AD60; 
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    padding-right: 100px;
+}
+
+.payment-container .form-control::placeholder {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.payment-container .form-control:focus {
+    outline: none;
+    border-color: #D6AD60;
+    box-shadow: 0 0 8px #D6AD60;
+}
+
+.payment-container .payment-logos {
+    margin-top:40px;
+}
+
+.payment-container .payment-logos img {
+    height: 50px;
+    width:100px;
+}
+
+.payment-container .text-danger {
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    margin-top:25px !important;
 }

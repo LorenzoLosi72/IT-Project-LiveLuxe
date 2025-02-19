@@ -31,24 +31,26 @@ function Login() {
     };
 
     // Login management
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // Page refresh prevention
+const handleSubmit = async (e) => {
+    e.preventDefault(); // Page refresh prevention
 
-        try {
-            const hashedPassword = await hashPassword(password); // Creating hash password.
-            const response = await axios.post('http://localhost:3001/api/login', { username, password: hashedPassword, }); // Send a POST request to the server with the login data.
+    try {
+        const hashedPassword = await hashPassword(password); // Creating hash password.
+        const response = await axios.post('http://localhost:3001/api/login', { username, password: hashedPassword, }); // Send a POST request to the server with the login data.
 
-            const { isHost } = response.data; // Extract user role.
-            login(username, isHost); // Pass username and role corresponding to the context.
+        const { isHost, firstName, lastName, userId } = response.data; // Extract user role, first name, and last name.
 
-            // Redirect
-            const redirectPath = location.state?.from?.pathname || '/';
-            navigate(redirectPath);
-        } catch (err) {
-            console.error('Authentication failed:', err.response?.data || err.message);
-            setError('Invalid username or password');
-        }
-    };
+        // Pass FirstName and LastName to the login function in the AuthContext
+        login(username, isHost, firstName, lastName, userId);
+
+        // Redirect
+        const redirectPath = location.state?.from?.pathname || '/';
+        navigate(redirectPath);
+    } catch (err) {
+        console.error('Authentication failed:', err.response?.data || err.message);
+        setError('Invalid username or password');
+    }
+};
 
     // Login graphic form component
     return (

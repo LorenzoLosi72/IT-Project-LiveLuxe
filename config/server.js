@@ -21,7 +21,7 @@ app.post('/api/login', (req, res) => {
     getUserByUsernameAndPassword(username, password, (err, user) => {
         if (err) { res.status(500).send("Error retrieving user."); } 
         else if (user.length === 0) { res.status(401).send("Invalid username or password."); } 
-        else { res.status(200).json({ username: user[0].Username, isHost: user[0].IsHost }); }
+        else { res.status(200).json({ username: user[0].Username, isHost: user[0].IsHost, firstName: user[0].FirstName, lastName: user[0].LastName, userId: user[0].UserID })}
     });
 });
  
@@ -441,6 +441,41 @@ app.get('/api/house/:id', (req, res) => {
             });
         });
     });
+});
+
+// Booking confirm API
+app.post('/api/bookings', async (req, res) => {
+    const { startDate, endDate, totalPrice, bookingStatus, propertyId, userId } = req.body;
+
+    try {
+        const result = await db.query(
+            'INSERT INTO bookings (StartDate, EndDate, TotalPrice, BookingStatus, PropertyID, UserID) VALUES (?, ?, ?, ?, ?, ?)',
+            [startDate, endDate, totalPrice, bookingStatus, propertyId, userId]
+        );
+
+        const bookingId = result.insertId; 
+        res.status(201).json({ bookingId });
+    } catch (error) {
+        console.error('Error creating booking:', error);
+        res.status(500).json({ error: 'Failed to create booking' });
+    }
+});
+
+// Payment booking API
+app.post('/api/payments', async (req, res) => {
+    const { paymentDate, amount, bookingId } = req.body;
+
+    try {
+        await db.query(
+            'INSERT INTO payments (Amount, PaymentDate, BookingID) VALUES (?, ?, ?)',
+            [paymentDate, amount, bookingId]
+        );
+
+        res.status(201).json({ message: 'Payment processed successfully' });
+    } catch (error) {
+        console.error('Error processing payment:', error);
+        res.status(500).json({ error: 'Failed to process payment' });
+    }
 });
 
 // Location API
