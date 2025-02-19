@@ -1,0 +1,70 @@
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: transparent;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #D6AD60;
+    color: #D6AD60;
+}
+
+h1, h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #D6AD60;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: transparent;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 12px;
+    border: 1px solid #D6AD60;
+    text-align: left;
+    color: #D6AD60;
+    background: transparent;
+}
+
+.table th {
+    background: transparent;
+    color: #D6AD60;
+    font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+    background: transparent;
+}
+
+.table tr:hover {
+    background: rgba(214, 173, 96, 0.2);
+}
+
+p {
+    text-align: center;
+    font-size: 16px;
+    color: #D6AD60;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1, h2 {
+        font-size: 22px;
+    }
+    
+    .table th, .table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
