@@ -166,6 +166,59 @@ app.get('/api/houses', (req, res) => {
     });
 });
 
+app.post('/api/host-properties', (req, res) => {
+    const { username } = req.body;
+    const connection = createConnection();
+
+    if (!username) {
+        connection.end();
+        return res.status(400).json({ success: false, message: 'Username is required' });
+    }
+
+    const getUserQuery = "SELECT UserID FROM users WHERE Username = ?";
+    
+    connection.query(getUserQuery, [username], (err, userResults) => {
+        if (err) {
+            connection.end();
+            return res.status(500).json({ success: false, message: 'Database error' });
+        }
+
+        if (userResults.length === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const userID = userResults[0].UserID;
+
+        // Aggiorniamo la query per includere anche le immagini
+        const getPropertiesQuery = `
+            SELECT 
+                p.PropertyID, p.Name, p.GuestsNumber, p.Bedrooms, 
+                p.Address, 
+                GROUP_CONCAT(i.Image SEPARATOR ',') AS images 
+            FROM properties p
+            LEFT JOIN images i ON p.PropertyID = i.PropertyID
+            WHERE p.UserID = ?
+            GROUP BY p.PropertyID
+        `;
+
+        connection.query(getPropertiesQuery, [userID], (err, propertiesResults) => {
+            if (err) {
+                connection.end();
+                return res.status(500).json({ success: false, message: 'Database error' });
+            }
+
+            // Convertiamo le immagini da stringa a array
+            propertiesResults.forEach(property => {
+                property.images = property.images ? property.images.split(',') : [];
+            });
+
+            connection.end();
+            res.status(200).json({ success: true, properties: propertiesResults });
+        });
+    });
+});
+
 app.post("/api/booking", (req, res) => {
     const { startDate, endDate, houseId, totalPrice, username } = req.body;
 

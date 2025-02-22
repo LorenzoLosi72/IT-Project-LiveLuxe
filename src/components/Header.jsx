@@ -44,6 +44,7 @@ function Header() {
                             <>
                                 <Nav.Link onClick={() => handleNavigate('/rent-home')} > Rent your home </Nav.Link>
                                 <Nav.Link onClick={() => handleNavigate('/host-booking')} > Bookings </Nav.Link>
+                                 <Nav.Link onClick={() => handleNavigate('/host-properties')} > Your properties  </Nav.Link>
                             </>
                         )}
                         {isLoggedIn && userRole === 'client' && (

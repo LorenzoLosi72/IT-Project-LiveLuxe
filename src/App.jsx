@@ -10,6 +10,7 @@ import Delimiter from './components/Delimiter.jsx';
 import Registration from './components/Registration.jsx';
 import HouseDescription from './components/House-Description.jsx';
 import BookingPage from './components/Booking-Page.jsx';
+import HostProperties from './components/Host-properties.jsx';
 
 import RentHome from './components/Rent-Home.jsx';
 import UserAccount from './components/User-Account.jsx';
@@ -65,6 +66,8 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/registration" element={<Registration />} />
                         <Route path="/booking-page" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
+                        <Route path="/host-properties" element={<ProtectedRoute><HostProperties /></ProtectedRoute>} />
+
                         <Route
                             path="/rent-home"
                             element={
