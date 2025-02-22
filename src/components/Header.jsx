@@ -31,6 +31,7 @@ function Header() {
                         if ((isLoggedIn) && (userRole === 'host')) { handleNavigate('/')}
                         else if ((isLoggedIn) && (userRole === 'client')) { handleNavigate('/')}
                         else { handleNavigate('/')}
+                        setTimeout(() => { window.location.reload(); }, 100);
                         }}>
                     <img className="d-inline-block align-top" alt="LiveLuxe-Logo" src={Logo} width="50" height="50"/>
                     <span className="ms-2">LiveLuxe</span>

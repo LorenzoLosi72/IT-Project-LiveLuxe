@@ -26,7 +26,7 @@ function Footer() {
                     </Col>
                     <Col md={4} className="text-center text-md-end">
                         <h5>Copyright</h5>
-                        <p>© 2025 LiveLuxe. All rights reserved.</p>
+                        <p style={{ textAlign: 'end' }}>© 2025 LiveLuxe. All rights reserved.</p>
                     </Col>
                 </Row>
             </Container>

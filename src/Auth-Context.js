@@ -13,11 +13,11 @@ export function AuthProvider({ children }) {
 
     // Data recovery on assembly.
     useEffect(() => {
-        const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const role = localStorage.getItem('userRole'); 
-        const storedFirstName = localStorage.getItem('firstName');
-        const storedLastName = localStorage.getItem('lastName');
-        const storedUserId = localStorage.getItem('userId'); 
+        const isUserLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+        const role = sessionStorage.getItem('userRole'); 
+        const storedFirstName = sessionStorage.getItem('firstName');
+        const storedLastName = sessionStorage.getItem('lastName');
+        const storedUserId = sessionStorage.getItem('userId');
         
         setIsLoggedIn(isUserLoggedIn);
         setUserRole(role);
@@ -29,12 +29,12 @@ export function AuthProvider({ children }) {
     // Login function
     const login = (username, isHost, firstName, lastName, userId) => {
         const role = isHost ? 'host' : 'client';
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('username', username);
-        localStorage.setItem('userRole', role);
-        localStorage.setItem('firstName', firstName);
-        localStorage.setItem('lastName', lastName);
-        localStorage.setItem('userId', userId);
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('userRole', role);
+        sessionStorage.setItem('firstName', firstName);
+        sessionStorage.setItem('lastName', lastName);
+        sessionStorage.setItem('userId', userId);
 
         setIsLoggedIn(true);
         setUserRole(role);
@@ -45,12 +45,12 @@ export function AuthProvider({ children }) {
 
     // Logout function
     const logout = () => {
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('username');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('firstName');
-        localStorage.removeItem('lastName');
-        localStorage.removeItem('userId');
+        sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('userRole');
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        sessionStorage.removeItem('userId');
         
         setIsLoggedIn(false);
         setUserRole(null);

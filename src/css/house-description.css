@@ -90,7 +90,7 @@
     border: 2px solid #D6AD60;
     color: #f7f7f7ef;
     width: 100%;
-    max-width: 350px;
+    max-width: 450px;
     margin: 0 auto;
     height: 435px;
     overflow: hidden;
@@ -154,13 +154,6 @@
 }
 
 .react-calendar__navigation button:active {
-    color:#171717;
-    background-color: #D6AD60 !important;
-    border-radius: 30px;
-    border: 1px solid #D6AD60;
-}
-
-.react-calendar__navigation button:focus {
     color:#171717;
     background-color: #D6AD60 !important;
     border-radius: 30px;

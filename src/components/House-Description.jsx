@@ -126,6 +126,7 @@ const handleBooking = () => {
         return;
     }
 
+    // Pass booking data 
     navigate("/booking-page", {
         state: {
             houseId: house.id,

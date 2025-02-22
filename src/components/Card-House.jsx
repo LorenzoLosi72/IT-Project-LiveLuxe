@@ -17,7 +17,7 @@ const CardHouse = ({ searchResults}) => {
         try { 
             if (Array.isArray(searchResults)) { 
                 console.log("Search results updated:", searchResults); 
-                setHouses([...new Set(searchResults)]); // Rimuove duplicati
+                setHouses([...new Set(searchResults)]); // Removes duplicate
             } else {
                 const response = await axios.get('http://localhost:3001/api/houses'); 
                 console.log("Fetched houses:", response.data);

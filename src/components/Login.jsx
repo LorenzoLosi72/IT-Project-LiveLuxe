@@ -40,7 +40,7 @@ const handleSubmit = async (e) => {
 
         const { isHost, firstName, lastName, userId } = response.data; // Extract user role, first name, and last name.
 
-        // Pass FirstName and LastName to the login function in the AuthContext
+        // Pass user data to Login function in the AuthContext
         login(username, isHost, firstName, lastName, userId);
 
         // Redirect

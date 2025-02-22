@@ -1,21 +1,3 @@
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: transparent;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border: 2px solid #D6AD60;
-    color: #D6AD60;
-}
-
-h1, h2 {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #D6AD60;
-}
 
 .table {
     width: 100%;
@@ -48,11 +30,7 @@ h1, h2 {
     background: rgba(214, 173, 96, 0.2);
 }
 
-p {
-    text-align: center;
-    font-size: 16px;
-    color: #D6AD60;
-}
+
 
 @media (max-width: 768px) {
     .container {

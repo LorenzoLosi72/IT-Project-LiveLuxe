@@ -41,7 +41,7 @@
     margin-left: 50px;
 }
 
-.booking-container .card-divider {
+.booking-container .line-divider {
     margin-top: 30px;
     margin-bottom: 40px;
     border: 1px solid #D6AD60;
@@ -124,3 +124,34 @@
     font-weight: 500 !important;
     margin-top:25px !important;
 }
+
+.booking-confirm-form .line-divider {
+    width:90%;
+}
+
+.booking-confirm-form .text-danger {
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    margin-top:25px !important;
+}
+
+.booking-confirm-form .message-payment-success {
+    color: #06b100ef; 
+    font-weight: 500; 
+    font-size: 18px;
+    margin-bottom: 15px;
+    line-height: 2;
+}
+
+.booking-confirm-form .message-contact-host {
+    color:#f7f7f7ef;
+    font-weight: 500; 
+    font-size: 18px;
+    line-height: 2;
+}
+
+.booking-confirm-form .btn-primary {
+    padding: 10px 30px;
+}
+
+

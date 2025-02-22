@@ -59,17 +59,16 @@ app.get('/api/host-bookings/:userID', (req, res) => {
     });
 });
 
+// User account data API
 app.post('/api/user-data', (req, res) => {
-    const { username } = req.body;
+    const { userId } = req.body;  
 
-    if (!username) {
-        return res.status(400).json({ success: false, message: 'Username is required' });
-    }
+    if (!userId) { return res.status(400).json({ success: false, message: 'UserId is required' }); }
 
     const connection = createConnection();
-    const query = `SELECT UserID, FirstName, LastName, DoB, TelephoneNumber, Address, Mail, Username, IsHost FROM users WHERE Username = ?`;
+    const query = `SELECT UserID, FirstName, LastName, DoB, TelephoneNumber, Address, Mail, Username, IsHost FROM users WHERE UserID = ?`;  
 
-    connection.query(query, [username], (err, result) => {
+    connection.query(query, [userId], (err, result) => {
         if (err) {
             console.error('Error fetching user data:', err);
             connection.end();
@@ -478,38 +477,80 @@ app.get('/api/house/:id', (req, res) => {
 });
 
 // Booking confirm API
-app.post('/api/bookings', async (req, res) => {
+app.post('/api/bookings', (req, res) => {
     const { startDate, endDate, totalPrice, bookingStatus, propertyId, userId } = req.body;
 
-    try {
-        const result = await db.query(
-            'INSERT INTO bookings (StartDate, EndDate, TotalPrice, BookingStatus, PropertyID, UserID) VALUES (?, ?, ?, ?, ?, ?)',
-            [startDate, endDate, totalPrice, bookingStatus, propertyId, userId]
-        );
+    if (!startDate || !endDate || !totalPrice || !propertyId || !userId) { return res.status(400).send("Missing required booking details."); }
 
-        const bookingId = result.insertId; 
-        res.status(201).json({ bookingId });
-    } catch (error) {
-        console.error('Error creating booking:', error);
-        res.status(500).json({ error: 'Failed to create booking' });
-    }
+    const connection = createConnection();
+
+    const insertBookingQuery = `
+        INSERT INTO bookings (StartDate, EndDate, TotalPrice, BookingStatus, PropertyID, UserID)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    
+    connection.query(insertBookingQuery, [startDate, endDate, totalPrice, bookingStatus, propertyId, userId], (err, results) => {
+        if (err) {
+            console.error("Error creating booking:", err.message);
+            res.status(500).send("Error creating booking.");
+            connection.end();
+        } else {
+            const bookingId = results.insertId;  
+            res.status(201).json({ bookingId });  
+            connection.end();
+        }
+    });
 });
 
 // Payment booking API
-app.post('/api/payments', async (req, res) => {
+app.post('/api/payments', (req, res) => {
     const { paymentDate, amount, bookingId } = req.body;
 
-    try {
-        await db.query(
-            'INSERT INTO payments (Amount, PaymentDate, BookingID) VALUES (?, ?, ?)',
-            [paymentDate, amount, bookingId]
-        );
+    if (!paymentDate || !amount || !bookingId) { return res.status(400).send("Missing required payment details."); }
 
-        res.status(201).json({ message: 'Payment processed successfully' });
-    } catch (error) {
-        console.error('Error processing payment:', error);
-        res.status(500).json({ error: 'Failed to process payment' });
-    }
+    const connection = createConnection();
+
+    const insertPaymentQuery = `
+        INSERT INTO payments (PaymentDate, Amount, BookingID)
+        VALUES (?, ?, ?)
+    `;
+    
+    connection.query(insertPaymentQuery, [paymentDate, amount, bookingId], (err, results) => {
+        if (err) {
+            console.error("Error processing payment:", err.message);
+            res.status(500).send("Error processing payment.");
+            connection.end();
+        } else {
+            res.status(201).json({ message: 'Payment processed successfully' });
+            connection.end();
+        }
+    });
+});
+
+// Update Booking Status API
+app.post('/api/update-booking-status', (req, res) => {
+    const { bookingId } = req.body;
+    console.log("Update APi entering")
+
+    if (!bookingId) { return res.status(400).send("Booking ID is required."); }
+
+    const connection = createConnection();
+
+    const updateBookingQuery = `
+        UPDATE bookings 
+        SET BookingStatus = 'Deleted' 
+        WHERE BookingID = ?
+    `;
+
+    connection.query(updateBookingQuery, [bookingId], (err, results) => {
+        if (err) {
+            console.error("Error updating booking status:", err.message);
+            res.status(500).send("Error updating booking status.");
+        } else {
+            res.status(200).json({ message: 'Booking status updated to Deleted.' });
+        }
+        connection.end();
+    });
 });
 
 // Location API
@@ -528,6 +569,7 @@ app.get('/api/locations', (req, res) => {
         connection.end();
     });
 });
+
 app.get('/api/house/:id/availability', (req, res) => {
     const connection = createConnection(); // Crea la connessione al database
     const houseId = parseInt(req.params.id, 10); // Ottieni l'ID dalla URL
