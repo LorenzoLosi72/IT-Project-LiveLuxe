@@ -55,7 +55,7 @@ function RentHome() {
             locationID: parseInt(form.formLocationID.value, 10),
             categoryID: parseInt(form.formCategoryID.value, 10),
             guestsNumber: parseInt(form.formGuestsNumber.value, 10),
-            userID: userID,  // **UserID direttamente da sessionStorage**
+            userID: userID, 
         };
 
         try {
