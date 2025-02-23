@@ -441,14 +441,16 @@ app.get('/api/house/:id', (req, res) => {
 
     const connection = createConnection();
 
-    // Function close database connection 
+    // Function to close database connection
     const closeConnection = () => {
         connection.end((err) => {
-            if(err) { console.error("Error closing the connection: ", err.message); }
+            if (err) {
+                console.error("Error closing the connection: ", err.message);
+            }
         });
-    }
+    };
 
-    // Details House Query
+    // House Details Query
     const houseQuery = `
         SELECT 
             p.PropertyID AS id,
@@ -475,26 +477,27 @@ app.get('/api/house/:id', (req, res) => {
     `;
 
     connection.query(houseQuery, [houseId], (err, houseResults) => {
-        if (err) { 
+        if (err) {
             console.error("Error fetching house details:", err.message);
             closeConnection();
-            res.status(500).send("Error fetching house details."); 
+            return res.status(500).send("Error fetching house details.");
         }
-        else if (houseResults.length === 0) {
-                closeConnection(); 
-                res.status(404).send("House not found."); 
+
+        if (houseResults.length === 0) {
+            closeConnection();
+            return res.status(404).send("House not found.");
         }
-    
+
         const houseDetails = houseResults[0];
         houseDetails.images = houseDetails.images ? houseDetails.images.split(',') : [];
 
-        // Reviews House Query
+        // Reviews Query
         const reviewQuery = `
-                SELECT r.Rating, r.TextReview, DATE_FORMAT(r.DateReview, '%Y-%m-%dT%H:%i:%sZ') AS dateReview, u.Username AS userName 
-                FROM reviews r
-                JOIN users u ON r.UserID = u.UserID
-                WHERE r.PropertyID = ?
-                ORDER BY r.DateReview DESC
+            SELECT r.Rating, r.TextReview, DATE_FORMAT(r.DateReview, '%Y-%m-%dT%H:%i:%sZ') AS dateReview, u.Username AS userName 
+            FROM reviews r
+            JOIN users u ON r.UserID = u.UserID
+            WHERE r.PropertyID = ?
+            ORDER BY r.DateReview DESC
         `;
 
         connection.query(reviewQuery, [houseId], (reviewErr, reviews) => {
@@ -504,26 +507,65 @@ app.get('/api/house/:id', (req, res) => {
                 return res.status(500).send("Error fetching reviews.");
             }
 
-            // Availabilities House Query
+            // Availability Query with Bookings Handling
             const availabilityQuery = `
-                SELECT DATE_FORMAT(a.StartDate, '%Y-%m-%dT%H:%i:%s.000Z') AS startDate, DATE_FORMAT(a.EndDate, '%Y-%m-%dT%H:%i:%s.000Z') AS endDate, a.PricePerNight
+                SELECT 
+                    DATE_FORMAT(GREATEST(a.StartDate, CURDATE()), '%Y-%m-%dT%H:%i:%s.000Z') AS startDate, 
+                    DATE_FORMAT(a.EndDate, '%Y-%m-%dT%H:%i:%s.000Z') AS endDate, 
+                    a.PricePerNight
                 FROM availabilities a
                 WHERE a.PropertyID = ?
                 AND a.StartDate >= CURDATE()
-                ORDER BY a.StartDate
+                AND NOT EXISTS (
+                    SELECT 1 FROM bookings b 
+                    WHERE b.PropertyID = a.PropertyID 
+                    AND (b.StartDate <= a.EndDate AND b.EndDate >= a.StartDate)
+                ) 
+
+                UNION 
+
+                -- Part 1: Availability before a booking
+                SELECT 
+                    DATE_FORMAT(GREATEST(a.StartDate, CURDATE()), '%Y-%m-%dT%H:%i:%s.000Z') AS startDate, 
+                    DATE_FORMAT(DATE_SUB(b.StartDate, INTERVAL 1 DAY), '%Y-%m-%dT%H:%i:%s.000Z') AS endDate, 
+                    a.PricePerNight
+                FROM availabilities a
+                JOIN bookings b 
+                    ON a.PropertyID = b.PropertyID 
+                    AND a.StartDate <= b.StartDate 
+                    AND a.EndDate >= b.EndDate
+                WHERE a.PropertyID = ?
+                AND a.StartDate >= CURDATE()
+                AND GREATEST(a.StartDate, CURDATE()) <= DATE_SUB(b.StartDate, INTERVAL 1 DAY) 
+
+                UNION
+
+                -- Part 2: Availability after a booking
+                SELECT 
+                    DATE_FORMAT(DATE_ADD(b.EndDate, INTERVAL 1 DAY), '%Y-%m-%dT%H:%i:%s.000Z') AS startDate, 
+                    DATE_FORMAT(a.EndDate, '%Y-%m-%dT%H:%i:%s.000Z') AS endDate, 
+                    a.PricePerNight
+                FROM availabilities a
+                JOIN bookings b 
+                    ON a.PropertyID = b.PropertyID 
+                    AND a.StartDate <= b.StartDate 
+                    AND a.EndDate >= b.EndDate
+                WHERE a.PropertyID = ?
+                AND a.StartDate >= CURDATE()
+                AND DATE_ADD(b.EndDate, INTERVAL 1 DAY) <= a.EndDate 
+
+                ORDER BY startDate;
             `;
 
-            connection.query(availabilityQuery, [houseId], (availabilityErr, availabilities) => {
+            connection.query(availabilityQuery, [houseId, houseId, houseId], (availabilityErr, availabilities) => {
                 if (availabilityErr) {
                     console.error("Error fetching availabilities:", availabilityErr.message);
                     closeConnection();
                     return res.status(500).send("Error fetching availabilities");
                 }
 
-
                 closeConnection();
-                res.status(200).json({...houseDetails, reviews, availabilities });
-
+                res.status(200).json({ ...houseDetails, reviews, availabilities });
             });
         });
     });
