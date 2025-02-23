@@ -8,32 +8,26 @@ import GlobalFooter from './Footer.jsx';
 function RentHome() {
     const [locations, setLocations] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [minEndDate, setMinEndDate] = useState('');
+    const [userID, setUserID] = useState(sessionStorage.getItem('userId') || null);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
-    const [userID, setUserID] = useState(null);
+    const [minEndDate, setMinEndDate] = useState('');
 
-    // To get userId
-    useEffect(() => {
-        axios.post('http://localhost:3001/api/user-data', { username: localStorage.getItem('username') })
-            .then((response) => setUserID(response.data.userid))
-            .catch((error) => console.error('Error fetching user data:', error));
-    }, []);
-
-    // to get locations
+    // Fetch locations
     useEffect(() => {
         axios.get('http://localhost:3001/api/locations')
             .then((response) => setLocations(response.data))
             .catch((error) => console.error('Error fetching locations:', error));
     }, []);
 
-    // to get locations categories
+    // Fetch categories
     useEffect(() => {
         axios.get('http://localhost:3001/api/categories')
             .then((response) => setCategories(response.data))
             .catch((error) => console.error('Error fetching categories:', error));
     }, []);
 
+    // Gestisce la selezione della data di inizio
     const handleStartDateChange = (e) => {
         const startDate = e.target.value;
         setMinEndDate(startDate);
@@ -42,6 +36,11 @@ function RentHome() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
+
+        if (!userID) {
+            setError('Failed to retrieve user information. Please log in again.');
+            return;
+        }
 
         const data = {
             name: form.formName.value,
@@ -56,13 +55,8 @@ function RentHome() {
             locationID: parseInt(form.formLocationID.value, 10),
             categoryID: parseInt(form.formCategoryID.value, 10),
             guestsNumber: parseInt(form.formGuestsNumber.value, 10),
-            userID: userID,
+            userID: userID,  // **UserID direttamente da sessionStorage**
         };
-
-        if (!userID) {
-            setError('Failed to retrieve user information. Please log in again.');
-            return;
-        }
 
         try {
             const response = await axios.post('http://localhost:3001/api/register-property', data);

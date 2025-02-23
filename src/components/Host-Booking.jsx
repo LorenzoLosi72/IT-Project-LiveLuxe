@@ -11,8 +11,8 @@ function HostBooking() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const username = localStorage.getItem('username');
+        const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+        const username = sessionStorage.getItem('username');
 
         if (!isLoggedIn || !username) {
             navigate('/login');
