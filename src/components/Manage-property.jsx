@@ -15,6 +15,7 @@ const ManageProperty = () => {
     const { isLoggedIn } = useContext(AuthContext);
     const [house, setHouse] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [blockedDates, setBlockedDates] = useState([]); // Date da bloccare nel calendario
     const [arrivalDate, setArrivalDate] = useState(null);
     const [departureDate, setDepartureDate] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
@@ -25,50 +26,53 @@ const ManageProperty = () => {
         const fetchHouseDetails = async () => {
             try {
                 const response = await axios.get(`http://localhost:3001/api/house/${id}`);
-                console.log("🏠 House Data Received:", response.data); // Debug
+                console.log("🏡 House Data:", response.data);
                 setHouse(response.data);
             } catch (error) {
                 console.error("Error fetching house details:", error);
+            }
+        };
+
+        const fetchBlockedDates = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3001/api/house-availability/${id}`);
+                
+                // Stampa nella console il risultato della seconda API
+                console.log("📅 Blocked Dates API Response:", response.data);
+
+                // Unisce disponibilità e prenotazioni in un unico array
+                const allBlockedDates = [...(response.data.availabilities || []), ...(response.data.bookedDates || [])];
+                setBlockedDates(allBlockedDates);
+            } catch (error) {
+                console.error("Error fetching blocked dates:", error);
             } finally {
                 setLoading(false);
             }
         };
+
         fetchHouseDetails();
+        fetchBlockedDates();
     }, [id]);
 
-    // Funzione per verificare se una data è disponibile o prenotata (NON deve essere selezionabile)
+    // Funzione per verificare se una data è bloccata (sia disponibile che prenotata)
     const isBlocked = (date) => {
-        if (!house || !house.availabilities) return false;
-
-        const dateToCheck = new Date(date).toISOString().split('T')[0]; // Converti in formato YYYY-MM-DD
-
-        // Controllo se la data è tra le disponibilità
-        for (const availability of house.availabilities) {
-            const startDate = new Date(availability.startDate).toISOString().split('T')[0];
-            const endDate = new Date(availability.endDate).toISOString().split('T')[0];
-
+        const dateToCheck = new Date(date).toISOString().split('T')[0];
+    
+        for (const range of blockedDates) {
+            const startDate = new Date(range.startDate).toISOString().split('T')[0];
+            const adjustedEndDate = new Date(range.endDate);
+            adjustedEndDate.setDate(adjustedEndDate.getDate() - 1); // ✅ Decrementa endDate di un giorno
+            const endDate = adjustedEndDate.toISOString().split('T')[0];
+    
+            // ✅ Ora il blocco è solo tra startDate e endDate (compreso), senza toccare il giorno successivo
             if (dateToCheck >= startDate && dateToCheck <= endDate) {
-                console.log(`🔵 AVAILABLE (Blocked on calendar) -> ${dateToCheck}`); // Debug
-                return true; // La data è disponibile, quindi NON deve essere selezionabile
+                return true;
             }
         }
-
-        // Controllo se la data è prenotata
-        if (house.bookings) {
-            for (const booking of house.bookings) {
-                const bookedStart = new Date(booking.startDate).toISOString().split('T')[0];
-                const bookedEnd = new Date(booking.endDate).toISOString().split('T')[0];
-
-                if (dateToCheck >= bookedStart && dateToCheck <= bookedEnd) {
-                    console.log(`🔴 BOOKED (Blocked on calendar) -> ${dateToCheck}`); // Debug
-                    return true; // La data è prenotata, quindi NON deve essere selezionabile
-                }
-            }
-        }
-
-        console.log(`✅ NOT AVAILABLE (Selectable) -> ${dateToCheck}`); // Debug
-        return false; // La data NON è disponibile né prenotata, quindi deve essere selezionabile
+    
+        return false;
     };
+    
 
     const handleDateChange = (date) => {
         setErrorMessage("");
@@ -95,7 +99,6 @@ const ManageProperty = () => {
 
         while (currentDate < end) {
             if (isBlocked(currentDate)) {
-                window.location.reload();
                 return false;
             }
             currentDate.setDate(currentDate.getDate() + 1);
@@ -106,12 +109,7 @@ const ManageProperty = () => {
 
     const tileClassName = ({ date }) => {
         if (date < today) return "react-calendar__tile--disabled"; // Blocca le date passate
-
-        if (isBlocked(date)) {
-            console.log(`🚫 Blocking date on calendar: ${date.toISOString().split('T')[0]}`); // Debug
-            return "react-calendar__tile--disabled"; // Blocca le date disponibili/prenotate
-        }
-
+        if (isBlocked(date)) return "react-calendar__tile--disabled"; // Blocca date disponibili e prenotate
         return null;
     };
 
@@ -141,31 +139,6 @@ const ManageProperty = () => {
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Row className="justify-content-left gx-4 mx-2">
-                        <Col md={10} className="house-location">
-                            <FaMapMarkerAlt className="house-icon-location" /> {house.address}
-                            <span className="detail-separator mx-2">•</span> {house.city}, {house.state}.
-                        </Col>
-                    </Row>
-                    <Row className="justify-content-left gx-4 mx-2">
-                        <Col md={10} className="house-guests-details">
-                            <FaUserFriends className="house-icon-guests" /> Guests: {house.guestsNumber}
-                            <span className="detail-separator mx-2"> • </span>
-                            <FaBed className="house-icon-guests" /> Bedrooms: {house.bedrooms}
-                        </Col>
-                    </Row>
-                    <Row className="justify-content-left gx-4 mx-2">
-                        <Col md={10} className="house-services-details">
-                            {advancedServices.filter(service => service.available).map((service, idx, filteredServices) => (
-                                <React.Fragment key={idx}>
-                                    {service.icon} {service.name}
-                                    {idx < filteredServices.length - 1 && (
-                                        <span className="detail-separator mx-2"> • </span>
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </Col>
-                    </Row>
                 </Col>
                 <Col md={4} className="calendar-container">
                     <div className="calendar-title">Manage Availabilities</div>

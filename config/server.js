@@ -519,6 +519,7 @@ app.get('/api/house/:id', (req, res) => {
                 AND NOT EXISTS (
                     SELECT 1 FROM bookings b 
                     WHERE b.PropertyID = a.PropertyID 
+                    AND b.BookingStatus <> 'Deleted'
                     AND (b.StartDate <= a.EndDate AND b.EndDate >= a.StartDate)
                 ) 
 
@@ -536,6 +537,7 @@ app.get('/api/house/:id', (req, res) => {
                     AND a.EndDate >= b.EndDate
                 WHERE a.PropertyID = ?
                 AND a.StartDate >= CURDATE()
+                AND b.BookingStatus <> 'Deleted'
                 AND GREATEST(a.StartDate, CURDATE()) <= DATE_SUB(b.StartDate, INTERVAL 1 DAY) 
 
                 UNION
@@ -552,10 +554,13 @@ app.get('/api/house/:id', (req, res) => {
                     AND a.EndDate >= b.EndDate
                 WHERE a.PropertyID = ?
                 AND a.StartDate >= CURDATE()
+                AND b.BookingStatus <> 'Deleted'
                 AND DATE_ADD(b.EndDate, INTERVAL 1 DAY) <= a.EndDate 
 
                 ORDER BY startDate;
             `;
+
+        
 
             connection.query(availabilityQuery, [houseId, houseId, houseId], (availabilityErr, availabilities) => {
                 if (availabilityErr) {
@@ -570,6 +575,65 @@ app.get('/api/house/:id', (req, res) => {
         });
     });
 });
+
+app.get('/api/house-availability/:id', (req, res) => {
+    const houseId = req.params.id;
+
+    const connection = createConnection();
+
+    // Function to close database connection
+    const closeConnection = () => {
+        connection.end((err) => {
+            if (err) {
+                console.error("Error closing the connection: ", err.message);
+            }
+        });
+    };
+
+    // Query per ottenere le disponibilità della casa
+    const availabilityQuery = `
+        SELECT 
+            DATE_FORMAT(a.StartDate, '%Y-%m-%dT%H:%i:%s.000Z') AS startDate, 
+            DATE_FORMAT(a.EndDate, '%Y-%m-%dT%H:%i:%s.000Z') AS endDate, 
+            a.PricePerNight
+        FROM availabilities a
+        WHERE a.PropertyID = ?
+        AND a.StartDate >= CURDATE()
+        ORDER BY a.StartDate;
+    `;
+
+    connection.query(availabilityQuery, [houseId], (availabilityErr, availabilities) => {
+        if (availabilityErr) {
+            console.error("Error fetching availabilities:", availabilityErr.message);
+            closeConnection();
+            return res.status(500).send("Error fetching availabilities.");
+        }
+
+        // Query per ottenere le date prenotate che NON sono "deleted"
+        const bookedDatesQuery = `
+            SELECT 
+                DATE_FORMAT(b.StartDate, '%Y-%m-%dT%H:%i:%s.000Z') AS startDate, 
+                DATE_FORMAT(b.EndDate, '%Y-%m-%dT%H:%i:%s.000Z') AS endDate
+            FROM bookings b
+            WHERE b.PropertyID = ?
+            AND b.BookingStatus <> 'deleted'
+            ORDER BY b.StartDate;
+        `;
+
+        connection.query(bookedDatesQuery, [houseId], (bookedErr, bookedDates) => {
+            if (bookedErr) {
+                console.error("Error fetching booked dates:", bookedErr.message);
+                closeConnection();
+                return res.status(500).send("Error fetching booked dates.");
+            }
+
+            closeConnection();
+            res.status(200).json({ availabilities, bookedDates });
+        });
+    });
+});
+
+
 
 // Booking confirm API
 app.post('/api/bookings', (req, res) => {
