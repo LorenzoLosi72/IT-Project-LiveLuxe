@@ -11,12 +11,11 @@ const HostProperties = () => {
     useEffect(() => {
         const fetchUserHouses = async () => {
             try {
-                const username = localStorage.getItem('username'); 
+                const username = sessionStorage.getItem('username'); 
                 if (!username) {
                     setError('User not logged in.');
                     return;
                 }
-
                 const response = await axios.post('http://localhost:3001/api/host-properties', { username });
                 console.log("Fetched houses response:", response);
                 console.log("Fetched houses data:", response.data);
