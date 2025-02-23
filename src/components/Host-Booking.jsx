@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/host-booking.css';
+
 function HostBooking() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
@@ -22,12 +23,14 @@ function HostBooking() {
 
     const fetchUserData = async (username) => {
         try {
-            const response = await axios.post('http://localhost:3001/api/user-data', { username });
+            console.log("Username from localStorage:", username);
+
+            const response = await axios.post('http://localhost:3001/api/get-userid', { username });
             console.log("Data received:", response.data);
             setUserData(response.data);
-            
-            if (response.data.UserID) {
-                fetchHostBookings(response.data.UserID);
+            const userID = response.data.UserID;
+            if (userID) {
+                fetchHostBookings(userID);
             }
         } catch (err) {
             console.error("Error fetching user data:", err.response?.data || err.message);
@@ -58,9 +61,7 @@ function HostBooking() {
 
     return (
         <div className="container">
-            
-            
-            <h2>Current and Upcoming Bookings</h2>
+            <h2 className="booking-title">Current and Upcoming Bookings</h2>
             {currentAndFutureBookings.length > 0 ? (
                 <table className="table">
                     <thead>
@@ -91,8 +92,8 @@ function HostBooking() {
             ) : (
                 <p>No current or upcoming bookings found.</p>
             )}
-            
-            <h2>Past Bookings</h2>
+
+            <h2 className="booking-title">Past Bookings</h2>
             {pastBookings.length > 0 ? (
                 <table className="table">
                     <thead>

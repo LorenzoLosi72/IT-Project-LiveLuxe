@@ -39,7 +39,7 @@ app.get('/api/host-bookings/:userID', (req, res) => {
         FROM bookings b
         JOIN properties p ON b.PropertyID = p.PropertyID
         JOIN users u ON b.UserID = u.UserID
-        WHERE p.UserID = ?;
+        WHERE p.UserID = ? AND b.BookingStatus != 'Deleted';
     `;
 
     connection.query(query, [userID], (err, results) => {
@@ -56,6 +56,39 @@ app.get('/api/host-bookings/:userID', (req, res) => {
 
         res.status(200).json(results);
         connection.end();
+    });
+});
+
+
+app.post('/api/get-userid', (req, res) => {
+    const { username } = req.body;
+    const connection = createConnection();
+
+    if (!username) {
+        connection.end();
+        return res.status(400).json({ message: "Username is required" });
+        
+
+    }
+
+    const query = "SELECT UserID FROM users WHERE Username = ?";
+
+    connection.query(query, [username], (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            connection.end();
+
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (results.length === 0) {
+            connection.end();
+
+            return res.status(404).json({ message: "User not found" });
+        }
+        connection.end();
+
+        res.json({ UserID: results[0].UserID });
     });
 });
 
