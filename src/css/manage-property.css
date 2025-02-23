@@ -1,0 +1,175 @@
+.container-house-description {
+    margin-left: 50px;
+    margin-top: 30px;
+    margin-right: 50px;
+    margin-bottom: 150px;
+}
+
+.house-title {
+    font-size: 30px;
+    font-weight: 600;
+    color: #f7f7f7ef;
+}
+
+.house-carousel {
+    overflow: hidden;
+    position: relative;
+    border-radius: 30px;
+    border: 3px solid #D6AD60;
+}
+
+.house-carousel-image {
+    height: 500px;
+    width: 500px;
+    object-fit: cover;
+    border-radius: 26px;
+}
+
+.house-location {
+    color: #f7f7f7ef; 
+    font-weight: 600; 
+    font-size: 25px;
+    margin-top: 40px;
+}
+
+.house-icon-location {
+    color:#D6AD60;
+    margin-right: 5px;
+}
+
+.house-services {
+    color: #f7f7f7ef; 
+    font-weight: 600; 
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.house-services svg {
+    color:#D6AD60;
+    margin-right: 10px;
+}
+
+.calendar-title {
+    font-size: 25px;
+    font-weight: 700;
+    color: #f7f7f7ef;
+    text-align: center;
+    margin-bottom: 20px; 
+}
+
+.calendar-container {
+    background-color: #171717;
+    padding: 20px 10px; 
+    border-radius: 30px;
+    border: 3px solid #D6AD60;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 40px;
+    height: 700px; 
+}
+
+.react-calendar {
+    background-color: #171717;
+    border-radius: 30px;
+    border: 2px solid #D6AD60;
+    color: #f7f7f7ef;
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    height: 435px;
+    overflow: hidden;
+}
+
+.react-calendar__tile {
+    background-color: transparent;
+    color: #f7f7f7ef;
+    border: 1px solid #D6AD60 !important;
+}
+
+.react-calendar__tile:hover,
+.react-calendar__tile:focus,
+.react-calendar__tile:active {
+    background-color: #D6AD60 !important;
+    color: #171717;
+    border: 1px solid #D6AD60;
+}
+
+.react-calendar__tile--selected {
+    background-color: #D6AD60;
+    color: #171717;
+}
+
+.react-calendar__tile--disabled {
+    background-color: slategray;
+    color: #171717;
+    pointer-events: none;
+}
+
+.react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #171717;
+    border: none;
+}
+
+.react-calendar__navigation button {
+    color: #f7f7f7ef;
+    background: transparent !important;
+    border: none;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.react-calendar__navigation button:hover,
+.react-calendar__navigation button:active {
+    color: #171717;
+    background-color: #D6AD60 !important;
+    border-radius: 30px;
+    border: 1px solid #D6AD60;
+}
+
+.price-per-night {
+    color: white; 
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.book-button {
+    margin-top: 20px;
+    background-color: #171717; 
+    color: #f7f7f7ef;
+    border-radius: 30px; 
+    padding: 10px 30px;
+    border: 2px solid #D6AD60; 
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.book-button:hover {
+    background-color: #D6AD60; 
+    color: #171717;
+    border-color: #D6AD60;
+}
+
+.book-button:active {
+    background-color: #D6AD60 !important;
+    color: #171717 !important;
+    border-color: #D6AD60 !important;  
+    transform: scale(0.95);
+    outline: none;
+}
+
+.calendar-container .text-danger {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    margin-top: 25px !important;
+}
+.price-label {
+    color: #D6AD60;  
+    font-weight: 600;
+    font-size: 18px;
+}

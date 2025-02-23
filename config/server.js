@@ -576,6 +576,8 @@ app.get('/api/house/:id', (req, res) => {
     });
 });
 
+
+//gaves the data when the house is booked or available
 app.get('/api/house-availability/:id', (req, res) => {
     const houseId = req.params.id;
 
@@ -633,6 +635,36 @@ app.get('/api/house-availability/:id', (req, res) => {
     });
 });
 
+app.post('/api/add-availability', (req, res) => {
+    const { startDate, endDate, pricePerNight, propertyID } = req.body;
+
+    if (!startDate || !endDate || !pricePerNight || !propertyID) {
+        return res.status(400).json({ message: "All fields are required." });
+    }
+
+  
+    const newEndDate = new Date(endDate);
+    newEndDate.setDate(newEndDate.getDate() + 1);
+    const formattedEndDate = newEndDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+
+    const connection = createConnection();
+    
+    const query = `
+        INSERT INTO availabilities (StartDate, EndDate, PricePerNight, PropertyID)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    connection.query(query, [startDate, formattedEndDate, pricePerNight, propertyID], (err, result) => {
+        if (err) {
+            console.error("Error inserting availability:", err);
+            return res.status(500).json({ message: "Error saving availability." });
+        }
+
+        res.status(201).json({ message: "Availability added successfully!", availabilityID: result.insertId });
+    });
+
+    connection.end();
+});
 
 
 // Booking confirm API
