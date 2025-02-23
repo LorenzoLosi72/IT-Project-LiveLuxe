@@ -17,7 +17,7 @@ import UserAccount from './components/User-Account.jsx';
 import UserBooking from './components/User-Booking.jsx'; 
 import HostBooking from './components/Host-Booking.jsx'; 
 import { AuthContext } from './Auth-Context';
-
+import ManageProperty from './components/Manage-property.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/app.css';
 
@@ -67,7 +67,7 @@ function App() {
                         <Route path="/registration" element={<Registration />} />
                         <Route path="/booking-page" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
                         <Route path="/host-properties" element={<ProtectedRoute><HostProperties /></ProtectedRoute>} />
-
+                        <Route path="/manage-property/:id" element={<ManageProperty />} />
                         <Route
                             path="/rent-home"
                             element={

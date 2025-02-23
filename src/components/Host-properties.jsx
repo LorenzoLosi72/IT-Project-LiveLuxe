@@ -81,11 +81,10 @@ const HostProperties = () => {
                                         <FaMapMarkerAlt className="icon-location"/> {house.Address} <br/> 
                                         <strong className="label-house-cards">Rooms:</strong> {house.Bedrooms} <br/>
                                         <strong className="label-house-cards">Guests:</strong> {house.GuestsNumber} <br/>
-                                         
                                     </Card.Text>
                                     <hr className="card-divider" />
                                     <div className="d-flex justify-content-end">
-                                        <Button variant="primary" onClick={() => window.location.href = `/manage-property/${house.PropertyID}`}>Manage</Button>
+                                        <div className="d-flex justify-content-end"><Button variant="primary" onClick={() => window.location.href = `/manage-property/${house.PropertyID}`}> Manage</Button></div>
                                     </div>
                                 </Card.Body>
                             </Card>
