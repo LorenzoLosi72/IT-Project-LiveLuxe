@@ -37,7 +37,8 @@ const HostProperties = () => {
     }, []);
 
     return (
-        <div className="container-house-cards">
+        <div className="container-house-cards" style={{ marginTop: '80px' }}>
+            <h1 className="container-house-cards-host">Your rental properties</h1>
             <Row className="justify-content-center gx-4 mx-2">
                 {error && <p className="error-message">{error}</p>}
                 {houses.length === 0 ? (

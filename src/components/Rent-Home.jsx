@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import '../css/rent-home.css';
 import Header from './Header.jsx';
-import GlobalFooter from './Footer.jsx';
 
 function RentHome() {
     const [locations, setLocations] = useState([]);
@@ -74,7 +74,7 @@ function RentHome() {
     return (
         <div className="d-flex flex-column min-vh-100">
             <Header />
-            <Container className="rent-home-container mt-4 flex-grow-1">
+            <Container className="rent-home-container mt-4 flex-grow-1" >
                 <h1 className="rent-home-title text-center mb-2">Rent Your Home</h1>
                 <p className="rent-home-warning text-center mb-4">
                     Please insert truthful information. If you provide false data, your account will be deleted.
@@ -128,13 +128,13 @@ function RentHome() {
                         <Col md={6}>
                             <Form.Group controlId="formGuestsNumber" className="mb-3">
                                 <Form.Label>Number of Guests</Form.Label>
-                                <Form.Control type="number" placeholder="Enter maximum number of guests" required min="0" />
+                                <Form.Control type="number" placeholder="Enter maximum number of guests" required min="1" max="10" />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group controlId="formBedrooms" className="mb-3">
                                 <Form.Label>Bedrooms</Form.Label>
-                                <Form.Control type="number" placeholder="Enter number of bedrooms" required min="0" />
+                                <Form.Control type="number" placeholder="Enter number of bedrooms" required min="1" max="10"/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -207,7 +207,6 @@ function RentHome() {
                     </Button>
                 </Form>
             </Container>
-            <GlobalFooter />
         </div>
     );
 }

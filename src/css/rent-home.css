@@ -1,42 +1,108 @@
-.rent-home-container label {
-    color: #D6AD60;
-    font-weight: bold;
+.rent-home-container {
+    padding: 25px 50px; 
+    background-color: #171717; 
+    border: 2px solid #D6AD60;
+    border-radius: 30px;
+    max-width: 1000px !important;
+    transition: transform 0.3s ease;
+    margin-bottom: 50px;
+}
+
+.rent-home-container:hover {
+    transform: translateY(-3px);
 }
 
 .rent-home-container h1 {
-    color: #D6AD60; 
-    text-transform: uppercase;
+    font-size: 25px;
+    font-weight: 700;
+    color: #f7f7f7ef;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.rent-home-container .rent-home-warning {
+    font-size: 15px; 
+    font-weight: 500;
+    color: #D6AD60;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.rent-home-container label {
+    font-size: 15px; 
+    font-weight: 500;
+    color: #f7f7f7ef;
+    margin-bottom: 5px;
+    margin-left: 15px;
+}
+
+.rent-home-container .form-control {
+    border-radius: 30px; 
+    background-color: #f7f7f7ef;
+    padding: 12px 20px;
+    border: 2px solid #D6AD60; 
+    font-size: 15px;
+    font-weight: 500; 
+    margin-bottom: 20px;
+    padding-right: 100px;
+}
+
+.rent-home-container .form-select {
+    border-radius: 30px; 
+    background-color: #f7f7f7ef;
+    padding: 12px 20px;
+    border: 2px solid #D6AD60; 
+    font-size: 15px;
+    font-weight: 500; 
+    margin-bottom: 20px;
+    padding-right: 100px;
+}
+
+.rent-home-container .form-control::placeholder {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.rent-home-container .form-control:focus {
+    outline: none;
+    border-color: #D6AD60;
+    box-shadow: 0 0 8px #D6AD60;
+}
+
+.rent-home-container .form-select option {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.rent-home-container .form-select:focus {
+    outline: none;
+    border-color: #D6AD60;
+    box-shadow: 0 0 8px #D6AD60;
 }
 
 .rent-home-container .btn-primary {
-    background-color: #D6AD60; 
-    border-color: #D6AD60;
-    color: #171717; 
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: #171717; 
+    color: #f7f7f7ef;
+    border-radius: 30px; 
+    padding: 14px 20px;
+    border: 2px solid #D6AD60; 
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
 }
 
 .rent-home-container .btn-primary:hover {
-    background-color: #B8894A; 
-    border-color: #B8894A;
-    color: #fff; 
-    transform: scale(1.05); 
+    background-color: #D6AD60; 
+    color: #171717;
+    border-color: #D6AD60;
 }
 
 .rent-home-container .btn-primary:active {
-    background-color: #B8894A;
-    border-color: #D6AD60;;
+    background-color: #D6AD60 !important;
+    color: #171717 !important;
+    border-color: #D6AD60 !important;  
     transform: scale(0.95);
-}
-.rent-home-title {
-    color: #D6AD60;
-    font-size: 1.8rem;
-    text-transform: none;
-    font-weight: bold;
-}
-
-.rent-home-warning {
-    color: #D6AD60;
-    font-size: 1rem;
-    font-weight: 500;
+    outline: none;
 }

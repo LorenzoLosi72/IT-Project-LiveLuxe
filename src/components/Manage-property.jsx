@@ -163,8 +163,17 @@ const ManageProperty = () => {
     if (loading) return <div>Loading...</div>;
     if (!house) return <div>House not found.</div>;
 
+    // Advanced services 
+        const advancedServices = [
+            { name: "Kitchen", icon: <FaUtensils className="icon-services" />, available: house.kitchen },
+            { name: "Wi-Fi", icon: <FaWifi className="icon-services" />, available: house.wifi },
+            { name: "Pool", icon: <FaSwimmer className="icon-services" />, available: house.pool },
+            { name: "Parking", icon: <FaCar className="icon-services" />, available: house.parking },
+            { name: "AC", icon: <FaSnowflake className="icon-services" />, available: house.airConditioning },
+        ];
+
     return (
-        <div className="container-house-description">
+        <div className="container-house-description-host">
             <Row className="justify-content-center gx-4 mx-2">
                 <Col md={10}><h1 className="house-title">{house.name}</h1></Col>
             </Row>
@@ -179,20 +188,26 @@ const ManageProperty = () => {
                         ))}
                     </Carousel>
                     <p className="house-location">
-                        <FaMapMarkerAlt /> {house.address}, {house.city}, {house.state}
+                        <FaMapMarkerAlt className="house-icon-location"/> {house.address}, {house.city}, {house.state}
                     </p>
-                    <p className="house-services">
-                        {house.pool && <><FaSwimmer /> Pool </>}
-                        {house.wifi && <><FaWifi /> Wi-Fi </>}
-                        {house.parking && <><FaCar /> Parking </>}
-                        {house.airConditioning && <><FaSnowflake /> AC </>}
-                    </p>
+                    <Row className="justify-content-left gx-4 mx-2">
+                        <Col md={10} className="house-services-details">
+                            {advancedServices.filter(service => service.available).map((service, idx, filteredServices) => (
+                                <React.Fragment key={idx}>
+                                    {service.icon} {service.name}
+                                    {idx < filteredServices.length - 1 && (
+                                        <span className="detail-separator mx-2"> • </span>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </Col>
+                    </Row>
                 </Col>
-                <Col md={4} className="calendar-container">
-                    <h4 className="text-center mb-3">Add Availabilities</h4> {}
+                <Col md={4} className="calendar-container-host">
+                    <div className="calendar-title">Add Availabilities</div>
                     <Calendar locale="en-US" onClickDay={handleDateChange} tileClassName={tileClassName} showNeighboringMonth={false} minDate={today} />
                     <Form.Group className="mt-3">
-                    <Form.Label className="price-label">Price per Night (€)</Form.Label>
+                    <Form.Label className="price-label-host">Price per Night ($)</Form.Label>
                     <Form.Control type="number" placeholder="Enter price" value={pricePerNight} onChange={handlePriceChange} />
                     </Form.Group>
                     <button className="book-button mt-3" onClick={handleAddAvailability}>Add Availability</button>

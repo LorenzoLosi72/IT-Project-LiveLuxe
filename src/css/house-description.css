@@ -167,14 +167,14 @@
 }
 
 .total-price {
-    color: white;  
+    color: #f7f7f7ef;  
     font-size: 18px;
     font-weight: 600;
     margin-top: 20px;
 }
 
 .price-per-night {
-    color: white; 
+    color: #f7f7f7ef; 
     font-size: 18px;
     margin-top: 10px;
 }

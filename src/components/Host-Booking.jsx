@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+import { Container } from 'react-bootstrap';
 import '../css/host-booking.css';
 
 function HostBooking() {
@@ -60,8 +62,8 @@ function HostBooking() {
     };
 
     return (
-        <div className="container">
-            <h2 className="booking-title">Current and Upcoming Bookings</h2>
+        <Container className="host-booking-container">
+            <h2 className="booking-title">Current / Upcoming Bookings</h2>
             {currentAndFutureBookings.length > 0 ? (
                 <table className="table">
                     <thead>
@@ -83,15 +85,17 @@ function HostBooking() {
                                 <td>{booking.GuestName}</td>
                                 <td>{formatDate(booking.StartDate)}</td>
                                 <td>{formatDate(booking.EndDate)}</td>
-                                <td>{booking.TotalPrice}€</td>
+                                <td>{booking.TotalPrice} $</td>
                                 <td>{booking.BookingStatus}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             ) : (
-                <p>No current or upcoming bookings found.</p>
+                <p className='host-booking-message'>No current or upcoming bookings found.</p>
             )}
+
+            <hr className="line-divider" />
 
             <h2 className="booking-title">Past Bookings</h2>
             {pastBookings.length > 0 ? (
@@ -115,7 +119,7 @@ function HostBooking() {
                                 <td>{booking.GuestName}</td>
                                 <td>{formatDate(booking.StartDate)}</td>
                                 <td>{formatDate(booking.EndDate)}</td>
-                                <td>{booking.TotalPrice}€</td>
+                                <td>{booking.TotalPrice} $</td>
                                 <td>{booking.BookingStatus}</td>
                             </tr>
                         ))}
@@ -124,7 +128,7 @@ function HostBooking() {
             ) : (
                 <p>No past bookings found.</p>
             )}
-        </div>
+        </Container>
     );
 }
 

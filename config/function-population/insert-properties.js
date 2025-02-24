@@ -12,7 +12,7 @@ const properties = [{
         WIFI: 1,
         AirConditioning: 1,
         Notes: 'Appartamento situato nel centro storico con tutti i comfort.',
-        Address: 'Via Roma 15, Milano',
+        Address: 'Via Roma 15',
         UserID: 1,
         LocationID: 1,
         CategoryID: 2
@@ -27,7 +27,7 @@ const properties = [{
         WIFI: 1,
         AirConditioning: 1,
         Notes: 'Villa spaziosa con ampio giardino e piscina privata.',
-        Address: 'Via dei Fiori 20, Firenze',
+        Address: 'Via dei Fiori 20',
         UserID: 3,
         LocationID: 2,
         CategoryID: 1
@@ -42,7 +42,7 @@ const properties = [{
         WIFI: 1,
         AirConditioning: 1,
         Notes: 'Suite lussuosa.',
-        Address: 'Via dei Fiori 20, Milano',
+        Address: 'Via dei Fiori 20',
         UserID: 3,
         LocationID: 1,
         CategoryID: 1
@@ -57,7 +57,7 @@ const properties = [{
         WIFI: 1,
         AirConditioning: 1,
         Notes: 'Nice apartment',
-        Address: 'Via dei Pini 20, Miano',
+        Address: 'Via dei Pini 20',
         UserID: 3,
         LocationID: 1,
         CategoryID: 1
@@ -72,7 +72,7 @@ const properties = [{
         WIFI: 1,
         AirConditioning: 1,
         Notes: 'Moderno monolocale perfetto per giovani coppie.',
-        Address: 'Corso Vittorio Emanuele II, Torino',
+        Address: 'Corso Vittorio Emanuele II',
         UserID: 1,
         LocationID: 3,
         CategoryID: 2
@@ -87,7 +87,7 @@ const properties = [{
         WIFI: 0,
         AirConditioning: 0,
         Notes: 'Casa rustica in montagna, ideale per chi cerca tranquillità.',
-        Address: 'Località Monte Bianco, Courmayeur',
+        Address: 'Località Monte Bianco',
         UserID: 3,
         LocationID: 4,
         CategoryID: 3

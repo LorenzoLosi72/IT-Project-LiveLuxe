@@ -11,7 +11,7 @@ let { insertCategories } = require('./function-population/insert-categories.js')
 let { insertProperties } = require('./function-population/insert-properties.js');
 let { insertAvailabilities } = require('./function-population/insert-availabilities.js');
 let { insertBookings } = require('./function-population/insert-bookings.js');
-let { insertPayments } = require('./function-population/insert-payments.js');
+/*let { insertPayments } = require('./function-population/insert-payments.js');*/
 let { insertReviews } = require('./function-population/insert-reviews.js');
 let { insertImages } = require('./function-population/insert-images.js');
 
